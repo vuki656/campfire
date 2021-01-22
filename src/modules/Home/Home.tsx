@@ -1,11 +1,36 @@
+import * as firebase from 'firebase'
 import * as React from 'react'
-import { Text } from 'react-native'
+import {
+    Button,
+    StyleSheet,
+    Text,
+    View,
+} from 'react-native'
+
+const styles = StyleSheet.create({
+    root: {
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center',
+        padding: 20,
+    },
+})
 
 export const Home = () => {
 
+    const logout = () => {
+        void firebase.auth().signOut()
+    }
+
     return (
-        <Text>
-            Home
-        </Text>
+        <View style={styles.root}>
+            <Button
+                onPress={logout}
+                title="Logout"
+            />
+            <Text>
+                Home
+            </Text>
+        </View>
     )
 }

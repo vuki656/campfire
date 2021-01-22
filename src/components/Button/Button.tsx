@@ -1,4 +1,5 @@
 import React from 'react'
+import type { TextStyle } from 'react-native'
 import {
     StyleSheet,
     Text,
@@ -24,11 +25,15 @@ const styles = StyleSheet.create({
 })
 
 export const Button = (props: ButtonProps) => {
-    const { label, ...other } = props
+    const {
+        label,
+        style: stylesProp,
+        ...other
+    } = props
 
     return (
         <TouchableOpacity
-            style={styles.root}
+            style={StyleSheet.compose<TextStyle>(styles.root, stylesProp)}
             {...other}
         >
             <Text style={styles.label}>

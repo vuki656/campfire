@@ -1,3 +1,4 @@
+import * as firebase from 'firebase'
 import { useFormik } from 'formik'
 import * as React from 'react'
 import {
@@ -10,12 +11,20 @@ import {
     TouchableWithoutFeedback,
     View,
 } from 'react-native'
+import {
+    adjectives,
+    animals,
+    colors,
+    uniqueNamesGenerator,
+} from 'unique-names-generator'
 import * as Yup from 'yup'
 
 import { Button } from '../../components/Button/Button'
 import { TextField } from '../../components/TextField/TextField'
 
 import type { LoginFormTypes } from './Login.types'
+
+const randomAnimalJs = require('random-animal.js') // Lib doesn't have types so this import has to be used
 
 const styles = StyleSheet.create({
     form: {
@@ -26,7 +35,7 @@ const styles = StyleSheet.create({
     },
     image: {
         height: 200,
-        marginBottom: 20,
+        marginBottom: 40,
         resizeMode: 'contain',
         width: 200,
     },
@@ -51,6 +60,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 20,
     },
+    submitButton: {
+        marginTop: 20,
+    },
     textField: {
         width: '70%',
     },
@@ -58,28 +70,67 @@ const styles = StyleSheet.create({
 
 const ValidationSchema = Yup.object()
     .shape({
+        email: Yup.string()
+            .email('Has to be the thing with the monkey sign aka email.')
+            .required('You gotta put something in.'),
         password: Yup.string()
             .min(5, 'It has to be more than 5 characters.')
-            .max(100, 'That\'s a long one. Make it a bit shorter.')
-            .required('You gotta put something in.'),
-        username: Yup.string()
-            .min(3, 'It has to be more than 2 characters.')
             .max(100, 'That\'s a long one. Make it a bit shorter.')
             .required('You gotta put something in.'),
     })
 
 export const Login = () => {
-    const handleSubmit = (formValues: LoginFormTypes) => {
-        console.log('-> formValues', formValues)
+    const checkIfUserExists = async (email: string) => {
+        return firebase
+            .auth()
+            .fetchSignInMethodsForEmail(email)
+            .then((authenticationMethods) => {
+                return authenticationMethods.length !== 0
+            })
+    }
+
+    const registerUser = (formValues: LoginFormTypes) => {
+        void firebase
+            .auth()
+            .createUserWithEmailAndPassword(formValues.email, formValues.password)
+            .then(async (result) => {
+                const randomName = uniqueNamesGenerator({
+                    dictionaries: [adjectives, colors, animals],
+                })
+
+                const randomAnimalLink = await randomAnimalJs.randomPanda()
+
+                return result.user?.updateProfile({
+                    displayName: randomName,
+                    photoURL: randomAnimalLink,
+                })
+            })
+    }
+
+    const logInUser = (formValues: LoginFormTypes) => {
+        void firebase
+            .auth()
+            .signInWithEmailAndPassword(formValues.email, formValues.password)
+    }
+
+    const handleSubmit = async (formValues: LoginFormTypes) => {
+        const userExists = await checkIfUserExists(formValues.email)
+
+        if (userExists) {
+            logInUser(formValues)
+        } else {
+            registerUser(formValues)
+        }
+
     }
 
     const form = useFormik<LoginFormTypes>({
         initialValues: {
+            email: '',
             password: '',
-            username: '',
         },
         onSubmit: (formValues) => {
-            handleSubmit(formValues)
+            void handleSubmit(formValues)
         },
         validateOnChange: false,
         validationSchema: ValidationSchema,
@@ -98,18 +149,21 @@ export const Login = () => {
                             style={styles.image}
                         />
                         <TextField
-                            error={Boolean(form.errors.username)}
-                            helperText={form.errors.username ?? 'What your mom calls you'}
-                            label="Username"
-                            onChange={form.handleChange('username')}
+                            autoCapitalize="none"
+                            autoCompleteType="email"
+                            error={Boolean(form.errors.email)}
+                            helperText={form.errors.email ?? 'The thing with the monkey sign'}
+                            label="Email"
+                            onChangeText={form.handleChange('email')}
                             styles={styles.textField}
-                            value={form.values.username}
+                            value={form.values.email}
                         />
                         <TextField
+                            autoCompleteType="password"
                             error={Boolean(form.errors.password)}
-                            helperText={form.errors.password ?? 'Something your neighbour couldn\'t guess'}
+                            helperText={form.errors.password ?? 'Something your neighbour can\'t guess'}
                             label="Password"
-                            onChange={form.handleChange('password')}
+                            onChangeText={form.handleChange('password')}
                             secure={true}
                             styles={styles.textField}
                             value={form.values.password}
@@ -119,6 +173,7 @@ export const Login = () => {
                             onPress={() => {
                                 form.handleSubmit()
                             }}
+                            style={styles.submitButton}
                         />
                     </View>
                     <View style={styles.noteContainer}>

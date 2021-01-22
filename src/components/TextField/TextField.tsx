@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        marginBottom: 30,
+        marginBottom: 15,
         width: '100%',
     },
 })
@@ -41,12 +41,13 @@ const styles = StyleSheet.create({
 export const TextField = (props: TextFieldProps) => {
     const {
         label,
-        onChange,
+        onChangeText,
         value,
         helperText,
         styles: stylesProp,
         error = false,
         secure = false,
+        ...other
     } = props
 
     return (
@@ -55,7 +56,8 @@ export const TextField = (props: TextFieldProps) => {
                 {label}
             </Text>
             <TextInput
-                onChangeText={onChange}
+                {...other}
+                onChangeText={onChangeText}
                 secureTextEntry={secure}
                 style={StyleSheet.compose<TextStyle>(styles.field, stylesProp)}
                 value={value}

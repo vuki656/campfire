@@ -1,12 +1,11 @@
-import type React from 'react'
 import type {
     StyleProp,
+    TextInputProps,
     TextStyle,
 } from 'react-native'
 
-export type TextFieldProps = {
+export type TextFieldProps = TextInputProps & {
     label?: string
-    onChange(e: string | React.ChangeEvent<any>): void
     value: string
     secure?: boolean
     error?: boolean
