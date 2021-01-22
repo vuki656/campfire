@@ -1,4 +1,6 @@
+import 'firebase/firestore'
 import React from 'react'
+import { LogBox } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import { initializeFirebase } from './src/lib/initializeFirebase'
@@ -6,6 +8,8 @@ import { useFontsInitialization } from './src/lib/useFontsInitialization'
 import { useUserAuthentication } from './src/lib/useUserAuthentication'
 import { Login } from './src/modules/Login'
 import { Root } from './src/modules/Root'
+
+LogBox.ignoreLogs(['Setting a timer for a long period of time'])
 
 initializeFirebase()
 

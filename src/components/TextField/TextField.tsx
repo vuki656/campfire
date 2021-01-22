@@ -45,6 +45,7 @@ export const TextField = (props: TextFieldProps) => {
         value,
         helperText,
         styles: stylesProp,
+        fullWidth = false,
         error = false,
         secure = false,
         ...other
@@ -59,7 +60,7 @@ export const TextField = (props: TextFieldProps) => {
                 {...other}
                 onChangeText={onChangeText}
                 secureTextEntry={secure}
-                style={StyleSheet.compose<TextStyle>(styles.field, stylesProp)}
+                style={[{ width: fullWidth ? '100%' : styles.field.width  }, styles.field, stylesProp ]}
                 value={value}
             />
             {helperText ? (

@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { Button } from '../../components/Button'
+import { HomeNewCampfireDialog } from './HomeNewCampfireDialog'
 
 const styles = StyleSheet.create({
     headerContainer: {
@@ -30,16 +30,6 @@ const styles = StyleSheet.create({
     headerImage: {
         height: 40,
         width: 120,
-    },
-    newButton: {
-        backgroundColor: 'white',
-        height: 30,
-        width: 130,
-    },
-    newButtonIcon: {
-        height: 15,
-        marginRight: 5,
-        width: 15,
     },
     topContainer: {
         alignItems: 'center',
@@ -82,17 +72,7 @@ export const Home = () => {
                     />
                 </View>
                 <View style={styles.topContainer}>
-                    <Button
-                        label="New Campfire"
-                        labelFontSize={10}
-                        startIcon={(
-                            <Image
-                                source={require('../../../assets/screens/global/log-axe.png')}
-                                style={styles.newButtonIcon}
-                            />
-                        )}
-                        style={styles.newButton}
-                    />
+                    <HomeNewCampfireDialog />
                     {user?.displayName ? (
                         <View style={styles.userInfo}>
                             <Text style={styles.username}>

@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         width: '70%',
     },
     noteText: {
-        color: '#5f7d95',
+        color: '#8a8a8a',
         fontFamily: 'MPlus',
         fontSize: 10,
         textAlign: 'center',
