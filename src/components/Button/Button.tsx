@@ -12,21 +12,27 @@ const styles = StyleSheet.create({
     label: {
         color: 'black',
         fontFamily: 'MPlus',
-        fontSize: 18,
     },
     root: {
+        alignItems: 'center',
         backgroundColor: '#f78e00',
         borderColor: 'black',
         borderRadius: 5,
         borderWidth: 3,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
         paddingHorizontal: 20,
         paddingVertical: 5,
+        width: 'auto',
     },
 })
 
 export const Button = (props: ButtonProps) => {
     const {
         label,
+        startIcon,
+        labelFontSize = 18,
         style: stylesProp,
         ...other
     } = props
@@ -36,7 +42,8 @@ export const Button = (props: ButtonProps) => {
             style={StyleSheet.compose<TextStyle>(styles.root, stylesProp)}
             {...other}
         >
-            <Text style={styles.label}>
+            {startIcon ? startIcon : null}
+            <Text style={StyleSheet.compose<TextStyle>(styles.label, { fontSize: labelFontSize })}>
                 {label}
             </Text>
         </TouchableOpacity>

@@ -14,13 +14,12 @@ import {
 import {
     adjectives,
     animals,
-    colors,
     uniqueNamesGenerator,
 } from 'unique-names-generator'
 import * as Yup from 'yup'
 
-import { Button } from '../../components/Button/Button'
-import { TextField } from '../../components/TextField/TextField'
+import { Button } from '../../components/Button'
+import { TextField } from '../../components/TextField'
 
 import type { LoginFormTypes } from './Login.types'
 
@@ -95,7 +94,9 @@ export const Login = () => {
             .createUserWithEmailAndPassword(formValues.email, formValues.password)
             .then(async (result) => {
                 const randomName = uniqueNamesGenerator({
-                    dictionaries: [adjectives, colors, animals],
+                    dictionaries: [adjectives, animals],
+                    separator: ' ',
+                    style: 'capital',
                 })
 
                 const randomAnimalLink = await randomAnimalJs.randomPanda()
@@ -145,7 +146,7 @@ export const Login = () => {
                 <View style={styles.root}>
                     <View style={styles.form}>
                         <Image
-                            source={require('../../../assets/login-logo.png')}
+                            source={require('../../../assets/screens/login/logo.png')}
                             style={styles.image}
                         />
                         <TextField

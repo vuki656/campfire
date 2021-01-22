@@ -4,22 +4,22 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { initializeFirebase } from './src/lib/initializeFirebase'
 import { useFontsInitialization } from './src/lib/useFontsInitialization'
 import { useUserAuthentication } from './src/lib/useUserAuthentication'
-import { Home } from './src/modules/Home'
 import { Login } from './src/modules/Login'
+import { Root } from './src/modules/Root'
 
 initializeFirebase()
 
 export default function App() {
     const isUserAuthenticated = useUserAuthentication()
-    const loaded = useFontsInitialization()
+    const fontsLoaded = useFontsInitialization()
 
-    if (!loaded) {
+    if (!fontsLoaded) {
         return null
     }
 
     return (
         <SafeAreaProvider>
-            {isUserAuthenticated ? <Home /> : <Login />}
+            {isUserAuthenticated ? <Root /> : <Login />}
         </SafeAreaProvider>
     )
 }
