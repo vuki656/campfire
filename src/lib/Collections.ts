@@ -1,3 +1,3 @@
 export enum Collections {
-    CAMPFIRES = 'campfire'
+    CAMPFIRES = 'campfires'
 }

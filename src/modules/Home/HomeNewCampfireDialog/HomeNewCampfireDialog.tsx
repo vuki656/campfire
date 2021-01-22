@@ -1,3 +1,4 @@
+import cuid from 'cuid'
 import firebase from 'firebase'
 import { useFormik } from 'formik'
 import * as React from 'react'
@@ -94,6 +95,9 @@ const styles = StyleSheet.create({
 
 const ValidationSchema = Yup.object()
     .shape({
+        emoji: Yup.string()
+            .min(2, 'Can\'t use that one.')
+            .max(2, 'Can\'t use that one.'),
         name: Yup.string()
             .min(3, 'It has to be more than 3 characters.')
             .max(100, 'That\'s a long one. Make it a bit shorter.')
@@ -106,28 +110,38 @@ export const HomeNewCampfireDialog = () => {
     const user = getCurrentUser()
 
     const handleSubmit = (formValues: CreateCampfireFormTypes) => {
-        void firebase
-            .firestore()
-            .collection('campfires')
-            .add({
-                author: {
-                    id: user?.uid,
-                    name: user?.displayName,
-                },
-                createdAt: new Date(),
-                name: formValues.name,
-            })
-            .then(() => {
-                toggleDialog()
-            })
+
     }
 
     const form = useFormik<CreateCampfireFormTypes>({
         initialValues: {
+            emoji: '💃',
             name: '',
         },
         onSubmit: (formValues) => {
-            handleSubmit(formValues)
+            const id = cuid()
+
+            void firebase
+                .firestore()
+                .collection(Collections.CAMPFIRES)
+                .doc(id)
+                .set({
+                    author: {
+                        id: user?.uid,
+                        name: user?.displayName,
+                    },
+                    createdAt: new Date(),
+                    emoji: formValues.emoji,
+                    id: id,
+                    name: formValues.name,
+                })
+                .then(() => {
+                    toggleDialog()
+                    form.resetForm({})
+                })
+                .catch((e) => {
+                    console.log(e)
+                })
         },
         validateOnChange: false,
         validationSchema: ValidationSchema,
@@ -174,8 +188,18 @@ export const HomeNewCampfireDialog = () => {
                             helperText={form.errors.name ?? 'How your campfire is going to be called'}
                             label="Name"
                             onChangeText={form.handleChange('name')}
+                            required={true}
                             style={styles.textField}
                             value={form.values.name}
+                        />
+                        <TextField
+                            error={Boolean(form.errors.emoji)}
+                            helperText={form.errors.emoji ?? 'Something to give it more flare'}
+                            label="Emoji"
+                            maxLength={2}
+                            onChangeText={form.handleChange('emoji')}
+                            style={styles.textField}
+                            value={form.values.emoji}
                         />
                         <View style={styles.bottomActions}>
                             <Button

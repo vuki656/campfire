@@ -12,5 +12,6 @@ export type TextFieldProps = TextInputProps & {
     error?: boolean
     styles?: StyleProp<TextStyle>
     helperText?: string
+    required?: boolean
 }
 

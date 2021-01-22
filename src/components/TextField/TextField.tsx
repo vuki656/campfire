@@ -45,6 +45,7 @@ export const TextField = (props: TextFieldProps) => {
         value,
         helperText,
         styles: stylesProp,
+        required = false,
         fullWidth = false,
         error = false,
         secure = false,
@@ -55,6 +56,9 @@ export const TextField = (props: TextFieldProps) => {
         <View style={styles.root}>
             <Text style={styles.label}>
                 {label}
+                <Text>
+                    {required ? '*' : ''}
+                </Text>
             </Text>
             <TextInput
                 {...other}
