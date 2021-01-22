@@ -1,3 +1,4 @@
+import { useFonts } from 'expo-font'
 import * as firebase from 'firebase'
 import React from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -13,13 +14,23 @@ if (firebase.apps.length) {
 }
 
 export default function App() {
+    const [loaded] = useFonts({
+        MPlus: require('./assets/fonts/MPlus-Bold.ttf'),
+    })
+
+    if (!loaded) {
+        return null
+    }
+
     let renderComponent = <Login />
 
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-            renderComponent = <Home />
-        }
-    })
+    firebase
+        .auth()
+        .onAuthStateChanged((user) => {
+            if (user) {
+                renderComponent = <Home />
+            }
+        })
 
     return (
         <SafeAreaProvider>
