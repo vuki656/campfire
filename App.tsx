@@ -7,7 +7,7 @@ import { initializeFirebase } from './src/lib/initializeFirebase'
 import { useFontsInitialization } from './src/lib/useFontsInitialization'
 import { useUserAuthentication } from './src/lib/useUserAuthentication'
 import { Login } from './src/modules/Login'
-import { Root } from './src/modules/Root'
+import { RootScreen } from './src/Screens'
 
 LogBox.ignoreLogs(['Setting a timer for a long period of time'])
 
@@ -23,7 +23,7 @@ export default function App() {
 
     return (
         <SafeAreaProvider>
-            {isUserAuthenticated ? <Root /> : <Login />}
+            {isUserAuthenticated ? <RootScreen /> : <Login />}
         </SafeAreaProvider>
     )
 }

@@ -1,7 +1,10 @@
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import {
     StyleSheet,
     Text,
+    TouchableOpacity,
     View,
 } from 'react-native'
 
@@ -43,8 +46,18 @@ const styles = StyleSheet.create({
 export const HomeCampfireCard = (props: HomeCampfireCardProps) => {
     const { campfire } = props
 
+    const navigator = useNavigation()
+
+    const handleNavigation = () => {
+        console.log('fired')
+        // navigator.navigate('Campfire')
+    }
+
     return (
-        <View style={styles.root}>
+        <TouchableOpacity
+            onPress={handleNavigation}
+            style={styles.root}
+        >
             <View style={styles.header}>
                 <Text style={styles.emoji}>
                     {campfire.emoji}
@@ -60,6 +73,6 @@ export const HomeCampfireCard = (props: HomeCampfireCardProps) => {
                 </Text>
                 {campfire.author.name}
             </Text>
-        </View>
+        </TouchableOpacity>
     )
 }

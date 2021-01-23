@@ -1,3 +1,6 @@
+import type { BottomTabBarProps } from '@react-navigation/bottom-tabs'
+import type { RouteProp } from '@react-navigation/native'
+
 export type CampfireType = {
     id: string
     createdAt: Date
