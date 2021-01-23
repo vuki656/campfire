@@ -10,8 +10,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { Collections } from '../../lib/Collections'
 import { getCurrentUser } from '../../lib/getCurrentUser'
+import type { CampfireType } from '../Campfire'
 
-import type { CampfireType } from './Home.types'
 import { HomeCampfireCard } from './HomeCampfireCard'
 import { HomeNewCampfireDialog } from './HomeNewCampfireDialog'
 

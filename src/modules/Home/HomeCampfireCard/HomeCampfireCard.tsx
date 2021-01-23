@@ -49,8 +49,7 @@ export const HomeCampfireCard = (props: HomeCampfireCardProps) => {
     const navigator = useNavigation()
 
     const handleNavigation = () => {
-        console.log('fired')
-        // navigator.navigate('Campfire')
+        navigator.navigate('Campfire', { campfire: campfire })
     }
 
     return (

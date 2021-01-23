@@ -6,9 +6,8 @@ import {
     StyleSheet,
 } from 'react-native'
 
-import { Settings } from '../modules/Settings'
-
-import { HomeScreen } from './HomeScreen'
+import { Settings } from '../../modules/Settings'
+import { HomeScreen } from '../HomeScreen/HomeScreen'
 
 const styles = StyleSheet.create({
     tabIcon: {
@@ -32,20 +31,20 @@ export const RootScreen = () => {
                 screenOptions={(props) => ({
                     tabBarIcon: () => {
                         switch (props.route.name) {
-                            case Tabs.HOME:
-                                return (
-                                    <Image
-                                        source={require('../../assets/screens/global/logs.png')}
-                                        style={styles.tabIcon}
-                                    />
-                                )
-                            case Tabs.SETTINGS:
-                                return (
-                                    <Image
-                                        source={require('../../assets/screens/global/axe.png')}
-                                        style={styles.tabIcon}
-                                    />
-                                )
+                        case Tabs.HOME:
+                            return (
+                                <Image
+                                    source={require('../../../assets/screens/global/logs.png')}
+                                    style={styles.tabIcon}
+                                />
+                            )
+                        case Tabs.SETTINGS:
+                            return (
+                                <Image
+                                    source={require('../../../assets/screens/global/axe.png')}
+                                    style={styles.tabIcon}
+                                />
+                            )
                         }
                     },
                 })}

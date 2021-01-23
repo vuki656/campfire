@@ -7,6 +7,7 @@ import {
     Modal,
     StyleSheet,
     Text,
+    TouchableOpacity,
     View,
 } from 'react-native'
 import useToggle from 'react-use/lib/useToggle'
@@ -16,8 +17,12 @@ import { Button } from '../../../components/Button'
 import { TextField } from '../../../components/TextField'
 import { Collections } from '../../../lib/Collections'
 import { getCurrentUser } from '../../../lib/getCurrentUser'
+import { CreateCampfireFormTypes } from '../../Home/HomeNewCampfireDialog/HomeNewCampfireDialog.types'
 
-import type { CreateCampfireFormTypes } from './HomeNewCampfireDialog.types'
+import type {
+    CampfireAddDialogProps,
+    NewLogFormTypes,
+} from './CampfireAddDialog.types'
 
 const styles = StyleSheet.create({
     bottomActions: {
@@ -26,6 +31,26 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         marginTop: 10,
+    },
+    button: {
+        alignItems: 'center',
+        backgroundColor: 'white',
+        borderColor: 'black',
+        borderRadius: 7,
+        borderWidth: 4,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: 10,
+    },
+    buttonImage: {
+        height: 30,
+        width: 25,
+    },
+    buttonText: {
+        fontFamily: 'MPlus',
+        fontSize: 20,
+        marginLeft: 5,
     },
     cancelButton: {
         backgroundColor: 'white',
@@ -37,16 +62,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     modalHeader: {
+        alignItems: 'center',
         display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
+        flexDirection: 'row',
+        justifyContent: 'center',
         marginBottom: 10,
-    },
-    modalHeaderDescription: {
-        color: '#8a8a8a',
-        fontFamily: 'MPlus',
-        fontSize: 12,
-        marginTop: 10,
     },
     modalHeaderIcon: {
         height: 30,
@@ -70,8 +90,14 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: 35,
+        paddingHorizontal: 35,
+        paddingVertical: 25,
         width: '80%',
+    },
+    root: {
+        bottom: 20,
+        position: 'absolute',
+        right: 30,
     },
     textField: {
         width: '70%',
@@ -95,41 +121,44 @@ const styles = StyleSheet.create({
 
 const ValidationSchema = Yup.object()
     .shape({
-        emoji: Yup.string()
-            .min(2, 'Can\'t use that one.')
-            .max(2, 'Can\'t use that one.'),
-        name: Yup.string()
-            .min(3, 'It has to be more than 3 characters.')
-            .max(100, 'That\'s a long one. Make it a bit shorter.')
+        description: Yup.string()
+            .max(2000, 'You wrote a bit too much here.'),
+        link: Yup.string()
+            .url('Has to be a link.')
             .required('You gotta put something in.'),
     })
 
-export const HomeNewCampfireDialog = () => {
+export const CampfireAddDialog = (props: CampfireAddDialogProps) => {
+    const { id } = props
+
     const [isDialogOpen, toggleDialog] = useToggle(false)
 
     const user = getCurrentUser()
 
-    const form = useFormik<CreateCampfireFormTypes>({
+    const form = useFormik<NewLogFormTypes>({
         initialValues: {
-            emoji: '💃',
-            name: '',
+            author: {
+                id: user?.uid ?? '',
+                name: user?.displayName ?? '',
+            },
+            description: '',
+            link: '',
         },
         onSubmit: (formValues) => {
-            const id = cuid()
+            const logId = cuid()
 
             void firebase
                 .firestore()
-                .collection(Collections.CAMPFIRES)
-                .doc(id)
+                .collection(Collections.LOGS)
+                .doc(logId)
                 .set({
                     author: {
                         id: user?.uid,
                         name: user?.displayName,
                     },
-                    createdAt: new Date(),
-                    emoji: formValues.emoji,
+                    description: formValues.description,
                     id: id,
-                    name: formValues.name,
+                    link: formValues.link,
                 })
                 .then(() => {
                     toggleDialog()
@@ -142,18 +171,21 @@ export const HomeNewCampfireDialog = () => {
 
     return (
         <>
-            <Button
-                label="New Campfire"
-                labelFontSize={10}
+            <TouchableOpacity
                 onPress={toggleDialog}
-                startIcon={(
+                style={styles.root}
+            >
+                <View style={styles.button}>
                     <Image
-                        source={require('../../../../assets/screens/global/log-axe.png')}
-                        style={styles.toggleButtonIcon}
+                        resizeMode="contain"
+                        source={require('../../../../assets/screens/campfire/log.png')}
+                        style={styles.buttonImage}
                     />
-                )}
-                style={styles.toggleButton}
-            />
+                    <Text style={styles.buttonText}>
+                        New
+                    </Text>
+                </View>
+            </TouchableOpacity>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -162,38 +194,36 @@ export const HomeNewCampfireDialog = () => {
                 <View style={styles.modalContainer}>
                     <View style={styles.modalRoot}>
                         <View style={styles.modalHeader}>
-                            <View style={styles.modalHeaderTitleContainer}>
-                                <Image
-                                    source={require('../../../../assets/screens/global/log-axe.png')}
-                                    style={styles.modalHeaderIcon}
-                                />
-                                <Text style={styles.modalHeaderTitle}>
-                                    New Campfire
-                                </Text>
-                            </View>
-                            <Text style={styles.modalHeaderDescription}>
-                                Create a new campfire where you can share fun stuff in.
+                            <Image
+                                source={require('../../../../assets/screens/campfire/log.png')}
+                                style={styles.modalHeaderIcon}
+                            />
+                            <Text style={styles.modalHeaderTitle}>
+                                New Log
                             </Text>
                         </View>
                         <TextField
-                            error={Boolean(form.errors.name)}
+                            error={Boolean(form.errors.link)}
                             fullWidth={true}
-                            helperText={form.errors.name ?? 'How your campfire is going to be called'}
-                            label="Name"
-                            onChangeText={form.handleChange('name')}
+                            helperText={form.errors.link}
+                            label="Link"
+                            onChangeText={form.handleChange('link')}
                             required={true}
                             style={styles.textField}
-                            value={form.values.name}
+                            value={form.values.link}
                         />
                         <TextField
-                            error={Boolean(form.errors.emoji)}
-                            helperText={form.errors.emoji ?? 'Something to give it more flare'}
-                            label="Emoji"
-                            maxLength={2}
-                            onChangeText={form.handleChange('emoji')}
+                            error={Boolean(form.errors.description)}
+                            fullWidth={true}
+                            helperText={form.errors.description}
+                            label="Description"
+                            multiline={true}
+                            numberOfLines={4}
+                            onChangeText={form.handleChange('description')}
                             style={styles.textField}
-                            value={form.values.emoji}
+                            value={form.values.description}
                         />
+
                         <View style={styles.bottomActions}>
                             <Button
                                 label="Cancel"

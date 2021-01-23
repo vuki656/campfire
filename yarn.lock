@@ -1017,6 +1017,20 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@dvukovic/eslint-config@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@dvukovic/eslint-config/-/eslint-config-0.1.0.tgz#bc262e0343d95157911d7cb371b083c6721a35f6"
+  integrity sha512-jYYjK1qyA3+76C1NX4fwsxLmsF6UtWtjcvh3nmy/kCeHqz/czHpqw3JHOll5t6sUC9NQBrXNcRTM8yr7vMprBg==
+  dependencies:
+    "@typescript-eslint/eslint-plugin" "^4.14.0"
+    "@typescript-eslint/parser" "^4.14.0"
+    eslint "^7.18.0"
+    eslint-plugin-import "^2.22.1"
+    eslint-plugin-promise "^4.2.1"
+    eslint-plugin-react "^7.22.0"
+    eslint-plugin-react-hooks "^4.2.0"
+    eslint-plugin-react-native "^3.10.0"
+
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"
   resolved "https://registry.yarnpkg.com/@egjs/hammerjs/-/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"
