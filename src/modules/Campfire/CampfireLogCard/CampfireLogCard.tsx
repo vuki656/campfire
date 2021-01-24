@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     },
     authorPrefix: {
         fontSize: 10,
+        marginRight: 3,
     },
     description: {
         borderColor: 'black',
