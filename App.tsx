@@ -1,16 +1,15 @@
 import 'firebase/firestore'
 import React from 'react'
-import { LogBox } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
+import { initializeErrorSuppression } from './src/lib/initializeErrorSuppression'
 import { initializeFirebase } from './src/lib/initializeFirebase'
 import { useFontsInitialization } from './src/lib/useFontsInitialization'
 import { useUserAuthentication } from './src/lib/useUserAuthentication'
 import { Login } from './src/modules/Login'
 import { RootScreen } from './src/Screens'
 
-LogBox.ignoreLogs(['Setting a timer for a long period of time'])
-
+initializeErrorSuppression()
 initializeFirebase()
 
 export default function App() {

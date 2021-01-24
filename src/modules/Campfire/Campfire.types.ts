@@ -19,3 +19,19 @@ export type CampfireType = {
     }
 }
 
+export type LogType = {
+    metadata: {
+        author: {
+            id: string
+            name: string
+        }
+        campfire: {
+            id: string
+        }
+    }
+    postDate: string
+    id: string
+    link: string
+    description: string
+}
+

@@ -5,8 +5,4 @@ export type CampfireAddDialogProps = {
 export type NewLogFormTypes = {
     link: string
     description: string
-    author: {
-        id: string
-        name: string
-    }
 }

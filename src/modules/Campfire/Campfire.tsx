@@ -1,21 +1,40 @@
 import { useNavigation } from '@react-navigation/native'
+import firebase from 'firebase'
 import * as React from 'react'
 import {
-    Image,
     ScrollView,
     StyleSheet,
     Text,
-    TouchableOpacity,
     View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+// @ts-expect-error // Doesn't have types
+import RNUrlPreview from 'react-native-url-preview'
 
 import { Button } from '../../components/Button'
+import { Collections } from '../../lib/Collections'
 
-import type { CampfireProps } from './Campfire.types'
+import type {
+    CampfireProps,
+    LogType,
+} from './Campfire.types'
 import { CampfireAddDialog } from './CampfireAddDialog/CampfireAddDialog'
 
 const styles = StyleSheet.create({
+    authorContainer: {
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        marginTop: 5,
+    },
+    authorName: {
+        fontSize: 10,
+        fontWeight: 'bold',
+    },
+    authorPrefix: {
+        fontSize: 10,
+    },
     backButton: {
         backgroundColor: 'white',
         height: 30,
@@ -50,8 +69,26 @@ const styles = StyleSheet.create({
         fontFamily: 'MPlus',
         fontSize: 20,
     },
-    root: {
+    logDescription: {
+        borderColor: 'black',
+        borderTopWidth: 2,
+        fontSize: 17,
         padding: 10,
+    },
+    logLink: {
+        padding: 10,
+    },
+    logRoot: {
+        borderColor: 'black',
+        borderRadius: 6,
+        borderWidth: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        marginBottom: 20,
+    },
+    root: {
+        padding: 20,
     },
     safeAreaView: {
         height: '100%',
@@ -63,6 +100,8 @@ export const Campfire = (props: CampfireProps) => {
 
     const navigator = useNavigation()
 
+    const [logs, setLogs] = React.useState<LogType[]>([])
+
     const handleBack = () => {
         navigator.goBack()
     }
@@ -72,6 +111,30 @@ export const Campfire = (props: CampfireProps) => {
         id,
         emoji,
     } = route.params.campfire
+
+    const fetchLogs = () => {
+        setLogs([])
+
+        void firebase
+            .firestore()
+            .collection(Collections.LOGS)
+            .where('metadata.campfire.id', '==', id)
+            .get()
+            .then((result) => {
+                result.forEach((singleResult) => {
+                    const log = singleResult.data() as LogType
+
+                    setLogs((currentLogs) => {
+                        return [...currentLogs, log]
+                    })
+                })
+            })
+
+    }
+
+    React.useEffect(() => {
+        fetchLogs()
+    }, [])
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
@@ -92,24 +155,31 @@ export const Campfire = (props: CampfireProps) => {
             </View>
             <View style={styles.root}>
                 <ScrollView>
-                    <Text>
-                        Hello
-                    </Text>
-                    <Text>
-                        Hello
-                    </Text>
-                    <Text>
-                        Hello
-                    </Text>
-                    <Text>
-                        Hello
-                    </Text>
-                    <Text>
-                        Hello
-                    </Text>
-                    <Text>
-                        Hello
-                    </Text>
+                    {logs.map((log) => {
+                        return (
+                            <View
+                                key={log.id}
+                                style={styles.logRoot}
+                            >
+                                <View style={styles.logLink}>
+                                    <RNUrlPreview text={log.link} />
+                                    <View style={styles.authorContainer}>
+                                        <Text style={styles.authorPrefix}>
+                                            Posted by:
+                                        </Text>
+                                        <Text style={styles.authorName}>
+                                            {log.metadata.author.name}
+                                        </Text>
+                                    </View>
+                                </View>
+                                {log.description ? (
+                                    <Text style={styles.logDescription}>
+                                        {log.description}
+                                    </Text>
+                                ) : null}
+                            </View>
+                        )
+                    })}
                 </ScrollView>
             </View>
             <CampfireAddDialog id={id} />

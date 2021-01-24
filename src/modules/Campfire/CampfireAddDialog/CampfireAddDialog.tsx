@@ -17,7 +17,6 @@ import { Button } from '../../../components/Button'
 import { TextField } from '../../../components/TextField'
 import { Collections } from '../../../lib/Collections'
 import { getCurrentUser } from '../../../lib/getCurrentUser'
-import { CreateCampfireFormTypes } from '../../Home/HomeNewCampfireDialog/HomeNewCampfireDialog.types'
 
 import type {
     CampfireAddDialogProps,
@@ -99,6 +98,9 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 30,
     },
+    textArea: {
+        textAlignVertical: 'top',
+    },
     textField: {
         width: '70%',
     },
@@ -137,10 +139,6 @@ export const CampfireAddDialog = (props: CampfireAddDialogProps) => {
 
     const form = useFormik<NewLogFormTypes>({
         initialValues: {
-            author: {
-                id: user?.uid ?? '',
-                name: user?.displayName ?? '',
-            },
             description: '',
             link: '',
         },
@@ -152,13 +150,19 @@ export const CampfireAddDialog = (props: CampfireAddDialogProps) => {
                 .collection(Collections.LOGS)
                 .doc(logId)
                 .set({
-                    author: {
-                        id: user?.uid,
-                        name: user?.displayName,
-                    },
                     description: formValues.description,
-                    id: id,
+                    id: logId,
                     link: formValues.link,
+                    metadata: {
+                        author: {
+                            id: user?.uid,
+                            name: user?.displayName,
+                        },
+                        campfire: {
+                            id: id,
+                        },
+                    },
+                    postDate: new Date(),
                 })
                 .then(() => {
                     toggleDialog()
@@ -220,7 +224,7 @@ export const CampfireAddDialog = (props: CampfireAddDialogProps) => {
                             multiline={true}
                             numberOfLines={4}
                             onChangeText={form.handleChange('description')}
-                            style={styles.textField}
+                            style={[styles.textField, styles.textArea]}
                             value={form.values.description}
                         />
 
