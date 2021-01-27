@@ -7,7 +7,7 @@ import { initializeFirebase } from './src/lib/initializeFirebase'
 import { useFontsInitialization } from './src/lib/useFontsInitialization'
 import { useUserAuthentication } from './src/lib/useUserAuthentication'
 import { Login } from './src/modules/Login'
-import { RootScreen } from './src/Navigators'
+import { BottomNavigator } from './src/Navigators'
 
 initializeErrorSuppression()
 initializeFirebase()
@@ -22,7 +22,7 @@ export default function App() {
 
     return (
         <SafeAreaProvider>
-            {isUserAuthenticated ? <RootScreen /> : <Login />}
+            {isUserAuthenticated ? <BottomNavigator /> : <Login />}
         </SafeAreaProvider>
     )
 }

@@ -1,1 +1,1 @@
-export * from './RootScreen'
+export * from './BottomNavigator'

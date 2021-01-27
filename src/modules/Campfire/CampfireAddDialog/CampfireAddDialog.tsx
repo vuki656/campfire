@@ -16,7 +16,7 @@ import * as Yup from 'yup'
 import { Button } from '../../../components/Button'
 import { TextField } from '../../../components/TextField'
 import { Collections } from '../../../lib/Collections'
-import { getCurrentUser } from '../../../lib/getCurrentUser'
+import { useCurrentUser } from '../../../lib/getCurrentUser'
 
 import type {
     CampfireAddDialogProps,
@@ -135,7 +135,7 @@ export const CampfireAddDialog = (props: CampfireAddDialogProps) => {
 
     const [isDialogOpen, toggleDialog] = useToggle(false)
 
-    const user = getCurrentUser()
+    const user = useCurrentUser()
 
     const form = useFormik<NewLogFormTypes>({
         initialValues: {
@@ -155,8 +155,8 @@ export const CampfireAddDialog = (props: CampfireAddDialogProps) => {
                     link: formValues.link,
                     metadata: {
                         author: {
-                            id: user?.uid,
-                            name: user?.displayName,
+                            id: user?.id,
+                            name: user?.name,
                         },
                         campfire: {
                             id: id,

@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { Button } from '../../components/Button'
 import { Collections } from '../../lib/Collections'
-import { getCurrentUser } from '../../lib/getCurrentUser'
+import { useCurrentUser } from '../../lib/getCurrentUser'
 
 import type {
     CampfireProps,
@@ -73,7 +73,7 @@ export const Campfire = (props: CampfireProps) => {
     const { route } = props
 
     const navigator = useNavigation()
-    const user = getCurrentUser()
+    const user = useCurrentUser()
 
     const [logs, setLogs] = React.useState<LogType[]>([])
 
@@ -134,7 +134,7 @@ export const Campfire = (props: CampfireProps) => {
                 </View>
             </View>
             <View style={styles.root}>
-                {author.id === user?.uid ? (
+                {author.id === user?.id ? (
                     <Button
                         label="Invite"
                         onPress={handleInvite}

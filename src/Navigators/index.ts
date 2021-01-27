@@ -1,2 +1,2 @@
 export * from './HomeNavigator/HomeScreen'
-export * from './BottomNavigator/RootScreen'
+export * from './BottomNavigator/BottomNavigator'

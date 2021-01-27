@@ -90,6 +90,7 @@ export const Login = () => {
                 return response.json()
             })
             .then((duckImageResponse: DuckImageResponseType) => {
+                // TODO: IF ENDS WITH .GIF, FETCH AGAIN
                 duckImageLink = duckImageResponse.url
             })
 
@@ -151,6 +152,7 @@ export const Login = () => {
                 saveUserInDatabase({
                     id: result.user?.uid ?? '',
                     imageURL: imageLink,
+                    memberOf: [],
                     name: name,
                 })
 

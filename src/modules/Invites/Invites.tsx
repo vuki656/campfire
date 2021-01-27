@@ -9,9 +9,7 @@ import {
 
 import { Button } from '../../components/Button'
 import { Collections } from '../../lib/Collections'
-import { getCurrentUser } from '../../lib/getCurrentUser'
-import { useCurrentUserData } from '../../lib/useCurrentUserData'
-import type { CampfireType } from '../Campfire'
+import { useCurrentUser } from '../../lib/getCurrentUser'
 
 import type { InviteType } from './Invites.types'
 
@@ -74,8 +72,7 @@ const styles = StyleSheet.create({
 })
 
 export const Invites: React.FunctionComponent = () => {
-    const user = getCurrentUser()
-    const userData = useCurrentUserData()
+    const user = useCurrentUser()
 
     const [invites, setInvites] = React.useState<InviteType[]>([])
 
@@ -85,7 +82,7 @@ export const Invites: React.FunctionComponent = () => {
         void firebase
             .firestore()
             .collection(Collections.INVITES)
-            .where('to.id', '==', user?.uid)
+            .where('to.id', '==', user?.id)
             .get()
             .then((result) => {
                 result.forEach((singleResult) => {
@@ -121,9 +118,9 @@ export const Invites: React.FunctionComponent = () => {
         void firebase
             .firestore()
             .collection(Collections.USERS)
-            .doc(user?.uid)
+            .doc(user?.id)
             .update({
-                memberOf: [...userData?.memberOf ?? [], invite.campfire ],
+                memberOf: [...user?.memberOf ?? [], invite.campfire ],
             })
             .then(() => {
                 deleteInvite(invite.id)

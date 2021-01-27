@@ -7,8 +7,5 @@
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "project": "./tsconfig.json"
-    },
-    "rules": {
-        "react-native/no-color-literals": "off"
     }
 }

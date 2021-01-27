@@ -10,7 +10,6 @@ import type { RootStackParamList } from './HomeScreen.types'
 const Stack = createStackNavigator<RootStackParamList>()
 
 export const HomeScreen = () => {
-
     return (
         <Stack.Navigator initialRouteName="Home">
             <Stack.Screen

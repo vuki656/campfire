@@ -1,55 +1,24 @@
-import firebase from 'firebase'
 import * as React from 'react'
 import {
     Image,
-    ScrollView,
     StyleSheet,
     Text,
     View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
+import { Header } from '../../components/Header'
 import { Collections } from '../../lib/Collections'
-import { getCurrentUser } from '../../lib/getCurrentUser'
+import { connection } from '../../lib/connection'
+import { useCurrentUser } from '../../lib/getCurrentUser'
+import theme from '../../lib/variables/theme'
 import type { CampfireType } from '../Campfire'
 import type { UserType } from '../Login/Login.types'
 
-import { HomeCampfireCard } from './HomeCampfireCard'
+import { HomeCampfireGroup } from './HomeCampfireGroup'
 import { HomeNewCampfireDialog } from './HomeNewCampfireDialog'
 
 const styles = StyleSheet.create({
-    campfireGroupContainer: {
-        display: 'flex',
-        flexDirection: 'column',
-        padding: 20,
-    },
-    campfireGroupContainerList: {
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-    },
-    campfireGroupContainerTitle: {
-        fontFamily: 'MPlus',
-        fontSize: 30,
-        marginBottom: 20,
-    },
-    headerContainer: {
-        alignItems: 'center',
-        backgroundColor: '#ffffff',
-        elevation: 6,
-        flexDirection: 'row',
-        height: 50,
-        justifyContent: 'flex-start',
-        paddingHorizontal: 10,
-        shadowColor: '#000',
-        shadowOffset: {
-            height: 3,
-            width: 0,
-        },
-        shadowOpacity: 0.27,
-        shadowRadius: 4.65,
-    },
     headerImage: {
         height: 40,
         width: 120,
@@ -62,7 +31,7 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     userImage: {
-        borderColor: 'black',
+        borderColor: theme.color.black,
         borderRadius: 100,
         borderWidth: 4,
         height: 40,
@@ -76,7 +45,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     username: {
-        fontFamily: 'MPlus',
+        fontFamily: theme.fontFamily.MPLUS,
     },
 })
 
@@ -84,30 +53,28 @@ export const Home = () => {
     const [ownedCampfires, setOwnedCampfires] = React.useState<CampfireType[]>([])
     const [joinedCampfires, setJoinedCampfires] = React.useState<CampfireType[]>([])
 
-    const user = getCurrentUser()
+    const user = useCurrentUser()
 
     const fetchOwnedCampfires = () => {
-        void firebase
-            .firestore()
-            .collection(Collections.CAMPFIRES)
-            .where('author.id', '==', user?.uid)
+        void connection(Collections.CAMPFIRES)
+            .where('author.id', '==', user?.id)
             .get()
-            .then((result) => {
-                result.forEach((singleResult) => {
-                    const ownedCampfire = singleResult.data() as CampfireType
+            .then((results) => {
+                const fetchedCampfires: CampfireType[] = []
 
-                    setOwnedCampfires((currentOwnedCampfire) => {
-                        return [...currentOwnedCampfire, ownedCampfire]
-                    })
+                results.forEach((result) => {
+                    const fetchedCampfire = result.data() as CampfireType
+
+                    fetchedCampfires.push(fetchedCampfire)
                 })
+
+                setOwnedCampfires(fetchedCampfires)
             })
     }
 
     const fetchJoinedCampfires = () => {
-        void firebase
-            .firestore()
-            .collection(Collections.USERS)
-            .doc(user?.uid)
+        void connection(Collections.USERS)
+            .doc(user?.id)
             .get()
             .then((result) => {
                 const fetchedUser = result.data() as UserType
@@ -116,85 +83,45 @@ export const Home = () => {
             })
     }
 
-    // TODO: FIX DUPS
-    const registerCampfireListener = () => {
-        firebase
-            .firestore()
-            .collection(Collections.CAMPFIRES)
-            .onSnapshot(() => {
-                setOwnedCampfires([])
-
-                fetchOwnedCampfires()
-            })
-
-        firebase
-            .firestore()
-            .collection(Collections.USERS)
-            .onSnapshot(() => {
-                setJoinedCampfires([])
-
-                fetchJoinedCampfires()
-            })
-    }
-
     React.useEffect(() => {
-        registerCampfireListener()
+        fetchOwnedCampfires()
+        fetchJoinedCampfires()
     }, [])
 
     return (
         <SafeAreaView>
             <View>
-                <View style={styles.headerContainer}>
-                    <Image
-                        resizeMode="contain"
-                        source={require('../../../assets/screens/home/top-logo.png')}
-                        style={styles.headerImage}
-                    />
-                </View>
+                <Header
+                    leftNode={(
+                        <Image
+                            resizeMode="contain"
+                            source={require('../../../assets/screens/home/top-logo.png')}
+                            style={styles.headerImage}
+                        />
+                    )}
+                />
                 <View style={styles.topContainer}>
                     <HomeNewCampfireDialog />
-                    {user?.displayName ? (
+                    {user?.name ? (
                         <View style={styles.userInfo}>
                             <Text style={styles.username}>
-                                {user?.displayName}
+                                {user?.name}
                             </Text>
                             <Image
-                                source={{ uri: user?.photoURL ?? '' }}
+                                source={{ uri: user?.imageURL ?? '' }}
                                 style={styles.userImage}
                             />
                         </View>
                     ) : null}
                 </View>
-                <View style={styles.campfireGroupContainer}>
-                    <Text style={styles.campfireGroupContainerTitle}>
-                        Your Campfires
-                    </Text>
-                    <View style={styles.campfireGroupContainerList}>
-                        {ownedCampfires.map((campfire) => {
-                            return (
-                                <HomeCampfireCard
-                                    campfire={campfire}
-                                    key={campfire.id}
-                                />
-                            )
-                        })}
-                    </View>
-                </View>
-                <View style={styles.campfireGroupContainer}>
-                    <Text style={styles.campfireGroupContainerTitle}>
-                        Joined Campfires
-                    </Text>
-                    <View style={styles.campfireGroupContainerList}>
-                        {joinedCampfires.map((campfire) => {
-                            return (
-                                <HomeCampfireCard
-                                    campfire={campfire}
-                                    key={campfire.id}
-                                />
-                            )
-                        })}
-                    </View>
-                </View>
+                <HomeCampfireGroup
+                    campfires={ownedCampfires}
+                    title="Your Campfires"
+                />
+                <HomeCampfireGroup
+                    campfires={joinedCampfires}
+                    title="Joined Campfires"
+                />
             </View>
         </SafeAreaView>
     )

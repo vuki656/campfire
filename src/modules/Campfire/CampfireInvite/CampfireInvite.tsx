@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { Button } from '../../../components/Button'
 import { Collections } from '../../../lib/Collections'
-import { getCurrentUser } from '../../../lib/getCurrentUser'
+import { useCurrentUser } from '../../../lib/getCurrentUser'
 import type { UserType } from '../../Login/Login.types'
 
 import type { CampfireInviteProps } from './CampfireInvite.types'
@@ -88,7 +88,7 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
     const { route } = props
 
     const navigator = useNavigation()
-    const currentUser = getCurrentUser()
+    const currentUser = useCurrentUser()
 
     const [users, setUsers] = React.useState<UserType[]>([])
 
@@ -140,8 +140,8 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
                     name: name,
                 },
                 from: {
-                    id: currentUser?.uid,
-                    name: currentUser?.displayName,
+                    id: currentUser?.id,
+                    name: currentUser?.name,
                 },
                 id: newId,
                 to: {
@@ -169,7 +169,7 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
             <View style={styles.root}>
                 <ScrollView>
                     {users.map((user) => {
-                        if (user.id === currentUser?.uid) {
+                        if (user.id === currentUser?.id) {
                             return
                         }
 

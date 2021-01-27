@@ -6,6 +6,7 @@ import {
     StyleSheet,
 } from 'react-native'
 
+import theme from '../../lib/variables/theme'
 import { Invites } from '../../modules/Invites'
 import { Settings } from '../../modules/Settings'
 import { HomeScreen } from '../HomeNavigator'
@@ -25,7 +26,7 @@ enum Tabs {
 
 const Tab = createBottomTabNavigator()
 
-export const RootScreen = () => {
+export const BottomNavigator = () => {
     return (
         <NavigationContainer>
             <Tab.Navigator
@@ -61,7 +62,7 @@ export const RootScreen = () => {
                     activeTintColor: 'black',
                     inactiveTintColor: '#cccccc',
                     labelStyle: {
-                        fontFamily: 'MPlus',
+                        fontFamily: theme.fontFamily.MPLUS,
                     },
                     style: {
                         height: 70,

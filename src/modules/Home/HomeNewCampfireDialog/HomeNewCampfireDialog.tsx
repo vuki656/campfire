@@ -15,7 +15,7 @@ import * as Yup from 'yup'
 import { Button } from '../../../components/Button'
 import { TextField } from '../../../components/TextField'
 import { Collections } from '../../../lib/Collections'
-import { getCurrentUser } from '../../../lib/getCurrentUser'
+import { useCurrentUser } from '../../../lib/getCurrentUser'
 
 import type { CreateCampfireFormTypes } from './HomeNewCampfireDialog.types'
 
@@ -107,7 +107,7 @@ const ValidationSchema = Yup.object()
 export const HomeNewCampfireDialog = () => {
     const [isDialogOpen, toggleDialog] = useToggle(false)
 
-    const user = getCurrentUser()
+    const user = useCurrentUser()
 
     const form = useFormik<CreateCampfireFormTypes>({
         initialValues: {
@@ -123,8 +123,8 @@ export const HomeNewCampfireDialog = () => {
                 .doc(id)
                 .set({
                     author: {
-                        id: user?.uid,
-                        name: user?.displayName,
+                        id: user?.id,
+                        name: user?.name,
                     },
                     createdAt: new Date(),
                     emoji: formValues.emoji,
