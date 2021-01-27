@@ -1,6 +1,6 @@
 import type { RouteProp } from '@react-navigation/native'
 
-import type { RootStackParamList } from '../../Screens/HomeScreen'
+import type { RootStackParamList } from '../../Navigators/HomeNavigator'
 
 type CampfireScreenRouteProp = RouteProp<RootStackParamList, 'Campfire'>
 

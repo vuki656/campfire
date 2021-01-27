@@ -8,7 +8,7 @@ import {
 
 import { Invites } from '../../modules/Invites'
 import { Settings } from '../../modules/Settings'
-import { HomeScreen } from '../HomeScreen'
+import { HomeScreen } from '../HomeNavigator'
 
 const styles = StyleSheet.create({
     tabIcon: {
@@ -33,27 +33,27 @@ export const RootScreen = () => {
                 screenOptions={(props) => ({
                     tabBarIcon: () => {
                         switch (props.route.name) {
-                        case Tabs.HOME:
-                            return (
-                                <Image
-                                    source={require('../../../assets/screens/global/logs.png')}
-                                    style={styles.tabIcon}
-                                />
-                            )
-                        case Tabs.INVITES:
-                            return (
-                                <Image
-                                    source={require('../../../assets/screens/global/email.png')}
-                                    style={styles.tabIcon}
-                                />
-                            )
-                        case Tabs.SETTINGS:
-                            return (
-                                <Image
-                                    source={require('../../../assets/screens/global/axe.png')}
-                                    style={styles.tabIcon}
-                                />
-                            )
+                            case Tabs.HOME:
+                                return (
+                                    <Image
+                                        source={require('../../../assets/screens/global/logs.png')}
+                                        style={styles.tabIcon}
+                                    />
+                                )
+                            case Tabs.INVITES:
+                                return (
+                                    <Image
+                                        source={require('../../../assets/screens/global/email.png')}
+                                        style={styles.tabIcon}
+                                    />
+                                )
+                            case Tabs.SETTINGS:
+                                return (
+                                    <Image
+                                        source={require('../../../assets/screens/global/axe.png')}
+                                        style={styles.tabIcon}
+                                    />
+                                )
                         }
                     },
                 })}
@@ -62,14 +62,12 @@ export const RootScreen = () => {
                     inactiveTintColor: '#cccccc',
                     labelStyle: {
                         fontFamily: 'MPlus',
-                        paddingTop: 18,
                     },
                     style: {
-                        alignItems: 'center',
-                        display: 'flex',
-                        flexDirection: 'row',
                         height: 70,
-                        padding: 20,
+                    },
+                    tabStyle: {
+                        paddingVertical: 10,
                     },
                 }}
             >
