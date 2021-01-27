@@ -19,7 +19,7 @@ import { HomeCampfireGroup } from './HomeCampfireGroup'
 import { HomeNewCampfireDialog } from './HomeNewCampfireDialog'
 
 const styles = StyleSheet.create({
-    headerImage: {
+    logo: {
         height: 40,
         width: 120,
     },
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     username: {
-        fontFamily: theme.fontFamily.MPLUS,
+        fontFamily: theme.fontFamily.mPlus,
     },
 })
 
@@ -96,7 +96,7 @@ export const Home = () => {
                         <Image
                             resizeMode="contain"
                             source={require('../../../assets/screens/home/top-logo.png')}
-                            style={styles.headerImage}
+                            style={styles.logo}
                         />
                     )}
                 />

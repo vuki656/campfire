@@ -62,7 +62,7 @@ export const BottomNavigator = () => {
                     activeTintColor: 'black',
                     inactiveTintColor: '#cccccc',
                     labelStyle: {
-                        fontFamily: theme.fontFamily.MPLUS,
+                        fontFamily: theme.fontFamily.mPlus,
                     },
                     style: {
                         height: 70,

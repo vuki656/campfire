@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     title: {
-        fontFamily: theme.fontFamily.MPLUS,
+        fontFamily: theme.fontFamily.mPlus,
         fontSize: 30,
         marginBottom: 20,
     },
