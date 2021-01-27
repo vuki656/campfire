@@ -2,6 +2,7 @@ import firebase from 'firebase'
 import * as React from 'react'
 import {
     Image,
+    ScrollView,
     StyleSheet,
     Text,
     View,
@@ -11,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Collections } from '../../lib/Collections'
 import { getCurrentUser } from '../../lib/getCurrentUser'
 import type { CampfireType } from '../Campfire'
+import type { UserType } from '../Login/Login.types'
 
 import { HomeCampfireCard } from './HomeCampfireCard'
 import { HomeNewCampfireDialog } from './HomeNewCampfireDialog'
@@ -80,12 +82,11 @@ const styles = StyleSheet.create({
 
 export const Home = () => {
     const [ownedCampfires, setOwnedCampfires] = React.useState<CampfireType[]>([])
+    const [joinedCampfires, setJoinedCampfires] = React.useState<CampfireType[]>([])
 
     const user = getCurrentUser()
 
     const fetchOwnedCampfires = () => {
-        setOwnedCampfires([])
-
         void firebase
             .firestore()
             .collection(Collections.CAMPFIRES)
@@ -100,11 +101,44 @@ export const Home = () => {
                     })
                 })
             })
+    }
 
+    const fetchJoinedCampfires = () => {
+        void firebase
+            .firestore()
+            .collection(Collections.USERS)
+            .doc(user?.uid)
+            .get()
+            .then((result) => {
+                const fetchedUser = result.data() as UserType
+
+                setJoinedCampfires(fetchedUser.memberOf)
+            })
+    }
+
+    // TODO: FIX DUPS
+    const registerCampfireListener = () => {
+        firebase
+            .firestore()
+            .collection(Collections.CAMPFIRES)
+            .onSnapshot(() => {
+                setOwnedCampfires([])
+
+                fetchOwnedCampfires()
+            })
+
+        firebase
+            .firestore()
+            .collection(Collections.USERS)
+            .onSnapshot(() => {
+                setJoinedCampfires([])
+
+                fetchJoinedCampfires()
+            })
     }
 
     React.useEffect(() => {
-        fetchOwnedCampfires()
+        registerCampfireListener()
     }, [])
 
     return (
@@ -137,6 +171,21 @@ export const Home = () => {
                     </Text>
                     <View style={styles.campfireGroupContainerList}>
                         {ownedCampfires.map((campfire) => {
+                            return (
+                                <HomeCampfireCard
+                                    campfire={campfire}
+                                    key={campfire.id}
+                                />
+                            )
+                        })}
+                    </View>
+                </View>
+                <View style={styles.campfireGroupContainer}>
+                    <Text style={styles.campfireGroupContainerTitle}>
+                        Joined Campfires
+                    </Text>
+                    <View style={styles.campfireGroupContainerList}>
+                        {joinedCampfires.map((campfire) => {
                             return (
                                 <HomeCampfireCard
                                     campfire={campfire}

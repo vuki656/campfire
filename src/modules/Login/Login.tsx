@@ -20,10 +20,13 @@ import * as Yup from 'yup'
 
 import { Button } from '../../components/Button'
 import { TextField } from '../../components/TextField'
+import { Collections } from '../../lib/Collections'
 
-import type { LoginFormTypes } from './Login.types'
-
-const randomAnimalJs = require('random-animal.js') // Lib doesn't have types so this import has to be used
+import type {
+    DuckImageResponseType,
+    LoginFormTypes,
+    UserType,
+} from './Login.types'
 
 const styles = StyleSheet.create({
     form: {
@@ -79,6 +82,20 @@ const ValidationSchema = Yup.object()
     })
 
 export const Login = () => {
+    const fetchDuckPhoto = async () => {
+        let duckImageLink = ''
+
+        await fetch('https://random-d.uk/api/v2/random')
+            .then(async (response) => {
+                return response.json()
+            })
+            .then((duckImageResponse: DuckImageResponseType) => {
+                duckImageLink = duckImageResponse.url
+            })
+
+        return duckImageLink
+    }
+
     const checkIfUserExists = async (email: string) => {
         return firebase
             .auth()
@@ -88,22 +105,58 @@ export const Login = () => {
             })
     }
 
+    const saveUserInDatabase = (user: UserType) => {
+        const {
+            name,
+            imageURL,
+            id,
+        } = user
+
+        void firebase
+            .firestore()
+            .collection(Collections.USERS)
+            .doc(id)
+            .set({
+                id: id,
+                imageURL: imageURL,
+                name: name,
+            })
+    }
+
+    const generateUserInfo = async () => {
+        const randomName = uniqueNamesGenerator({
+            dictionaries: [adjectives, animals],
+            separator: ' ',
+            style: 'capital',
+        })
+
+        const randomAnimalImageLink = await fetchDuckPhoto()
+
+        return {
+            imageLink: randomAnimalImageLink,
+            name: randomName,
+        }
+    }
+
     const registerUser = (formValues: LoginFormTypes) => {
         void firebase
             .auth()
             .createUserWithEmailAndPassword(formValues.email, formValues.password)
             .then(async (result) => {
-                const randomName = uniqueNamesGenerator({
-                    dictionaries: [adjectives, animals],
-                    separator: ' ',
-                    style: 'capital',
+                const {
+                    name,
+                    imageLink,
+                } = await generateUserInfo()
+
+                saveUserInDatabase({
+                    id: result.user?.uid ?? '',
+                    imageURL: imageLink,
+                    name: name,
                 })
 
-                const randomAnimalLink = await randomAnimalJs.randomPanda()
-
                 return result.user?.updateProfile({
-                    displayName: randomName,
-                    photoURL: randomAnimalLink,
+                    displayName: name,
+                    photoURL: imageLink,
                 })
             })
     }

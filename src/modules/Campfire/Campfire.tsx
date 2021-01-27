@@ -11,6 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { Button } from '../../components/Button'
 import { Collections } from '../../lib/Collections'
+import { getCurrentUser } from '../../lib/getCurrentUser'
 
 import type {
     CampfireProps,
@@ -54,6 +55,12 @@ const styles = StyleSheet.create({
         fontFamily: 'MPlus',
         fontSize: 20,
     },
+    inviteButton: {
+        backgroundColor: 'white',
+        height: 30,
+        marginBottom: 20,
+        width: 150,
+    },
     root: {
         padding: 20,
     },
@@ -66,6 +73,7 @@ export const Campfire = (props: CampfireProps) => {
     const { route } = props
 
     const navigator = useNavigation()
+    const user = getCurrentUser()
 
     const [logs, setLogs] = React.useState<LogType[]>([])
 
@@ -73,10 +81,15 @@ export const Campfire = (props: CampfireProps) => {
         navigator.goBack()
     }
 
+    const handleInvite = () => {
+        navigator.navigate('CampfireInvite', { campfire: route.params.campfire })
+    }
+
     const {
         name,
         id,
         emoji,
+        author,
     } = route.params.campfire
 
     const fetchLogs = () => {
@@ -121,6 +134,13 @@ export const Campfire = (props: CampfireProps) => {
                 </View>
             </View>
             <View style={styles.root}>
+                {author.id === user?.uid ? (
+                    <Button
+                        label="Invite"
+                        onPress={handleInvite}
+                        style={styles.inviteButton}
+                    />
+                ) : null}
                 <ScrollView>
                     {logs.map((log) => {
                         return (
