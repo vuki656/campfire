@@ -7,6 +7,8 @@ import {
 // @ts-expect-error // Doesn't have types
 import RNUrlPreview from 'react-native-url-preview'
 
+import theme from '../../../lib/variables/theme'
+
 import type { CampfireLogCardProps } from './CampfireLogCard.types'
 
 const styles = StyleSheet.create({
@@ -18,24 +20,24 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     authorName: {
-        fontSize: 10,
+        fontSize: theme.fontSize.caption,
         fontWeight: 'bold',
     },
     authorPrefix: {
-        fontSize: 10,
+        fontSize: theme.fontSize.caption,
         marginRight: 3,
     },
     description: {
-        borderColor: 'black',
+        borderColor: theme.color.black,
         borderTopWidth: 2,
-        fontSize: 17,
+        fontSize: theme.fontSize.subtitle,
         padding: 10,
     },
     link: {
         padding: 10,
     },
     root: {
-        borderColor: 'black',
+        borderColor: theme.color.black,
         borderRadius: 6,
         borderWidth: 2,
         display: 'flex',

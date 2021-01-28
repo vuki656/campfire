@@ -1,3 +1,5 @@
+/* eslint-disable sort-keys */
+
 export default {
     color: {
         black: 'black',
@@ -9,9 +11,9 @@ export default {
         mPlus: 'MPlus',
     },
     fontSize: {
-        annotation: 10,
-        subtitle: 20,
+        caption: 10,
         text: 12,
+        subtitle: 20,
         title: 25,
     },
 }

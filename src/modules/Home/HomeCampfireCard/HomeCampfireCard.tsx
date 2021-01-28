@@ -15,7 +15,7 @@ import type { HomeCampfireCardProps } from './HomeCampfireCard.types'
 const styles = StyleSheet.create({
     createdBy: {
         fontFamily: theme.fontFamily.mPlus,
-        fontSize: theme.fontSize.annotation,
+        fontSize: theme.fontSize.caption,
     },
     emoji: {
         fontSize: theme.fontSize.subtitle,
