@@ -1,9 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import cuid from 'cuid'
-import firebase from 'firebase'
 import * as React from 'react'
 import {
-    Image,
     ScrollView,
     StyleSheet,
     Text,
@@ -11,67 +9,44 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { Button } from '../../../components/Button'
-import { Collections } from '../../../lib/Collections'
-import { useCurrentUser } from '../../../lib/getCurrentUser'
-import type { UserType } from '../../Login/Login.types'
+import {
+    Button,
+    Header,
+    HeaderTitle,
+    UserImage,
+} from '../../../components'
+import {
+    Collections,
+    connection,
+    useCurrentUser,
+} from '../../../lib'
+import theme from '../../../lib/variables/theme'
+import type { UserType } from '../../Login'
 
 import type { CampfireInviteProps } from './CampfireInvite.types'
 
 const styles = StyleSheet.create({
     addButton: {
-        backgroundColor: 'white',
+        backgroundColor: theme.color.white,
         height: 30,
         width: 120,
     },
     backButton: {
-        backgroundColor: 'white',
+        backgroundColor: theme.color.white,
         height: 30,
         width: 100,
     },
-    headerBar: {
-        alignItems: 'center',
-        backgroundColor: 'white',
-        elevation: 6,
-        flexDirection: 'row',
-        height: 50,
-        justifyContent: 'space-between',
-        paddingHorizontal: 15,
-        shadowColor: '#000',
-        shadowOffset: {
-            height: 3,
-            width: 0,
-        },
-        shadowOpacity: 0.27,
-        shadowRadius: 4.65,
-        width: '100%',
-    },
-    headerTitle: {
-        alignItems: 'center',
-        flexDirection: 'row',
-    },
-    headerTitleText: {
-        fontFamily: 'MPlus',
-        fontSize: 20,
-    },
-    root: {
+    list: {
         padding: 20,
     },
     safeAreaView: {
         height: '100%',
     },
-    user: {
+    userContainer: {
         alignItems: 'center',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-    },
-    userImage: {
-        borderColor: 'black',
-        borderRadius: 100,
-        borderWidth: 4,
-        height: 40,
-        width: 40,
     },
     userInfo: {
         alignItems: 'center',
@@ -79,7 +54,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     username: {
-        fontFamily: 'MPlus',
+        fontFamily: theme.fontFamily.mPlus,
         marginLeft: 20,
     },
 })
@@ -100,20 +75,18 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
     } = route.params.campfire
 
     const fetchUsers = () => {
-        void firebase
-            .firestore()
-            .collection(Collections.USERS)
+        void connection(Collections.USERS)
             .get()
-            .then((result) => {
-                setUsers([])
+            .then((results) => {
+                const fetchedUsers: UserType[] = []
 
-                result.forEach((singleResult) => {
-                    const log = singleResult.data() as UserType
+                results.forEach((result) => {
+                    const fetchedUser = result.data() as UserType
 
-                    setUsers((currentUsers) => {
-                        return [...currentUsers, log]
-                    })
+                    fetchedUsers.push(fetchedUser)
                 })
+
+                setUsers(fetchedUsers)
             })
     }
 
@@ -128,9 +101,7 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
     const handleInvite = (targetUser: UserType) => () => {
         const newId = cuid()
 
-        void firebase
-            .firestore()
-            .collection(Collections.INVITES)
+        void connection(Collections.INVITES)
             .doc(newId)
             .set({
                 campfire: {
@@ -154,35 +125,32 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
-            <View style={styles.headerBar}>
-                <Button
-                    label="Back"
-                    onPress={handleBack}
-                    style={styles.backButton}
-                />
-                <View style={styles.headerTitle}>
-                    <Text style={styles.headerTitleText}>
-                        Invite
-                    </Text>
-                </View>
-            </View>
-            <View style={styles.root}>
+            <Header
+                leftNode={(
+                    <Button
+                        label="Back"
+                        onPress={handleBack}
+                        style={styles.backButton}
+                    />
+                )}
+                rightNode={(
+                    <HeaderTitle title="Invite" />
+                )}
+            />
+            <View style={styles.list}>
                 <ScrollView>
                     {users.map((user) => {
                         if (user.id === currentUser?.id) {
-                            return
+                            return null
                         }
 
                         return (
                             <View
                                 key={user.id}
-                                style={styles.user}
+                                style={styles.userContainer}
                             >
                                 <View style={styles.userInfo}>
-                                    <Image
-                                        source={{ uri: user?.imageURL ?? '' }}
-                                        style={styles.userImage}
-                                    />
+                                    <UserImage url={user?.imageURL ?? ''} />
                                     <Text style={styles.username}>
                                         {user?.name}
                                     </Text>

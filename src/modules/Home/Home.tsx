@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
+import { UserImage } from '../../components'
 import { Header } from '../../components/Header'
 import { Collections } from '../../lib/Collections'
 import { connection } from '../../lib/connection'
@@ -107,10 +108,7 @@ export const Home = () => {
                             <Text style={styles.username}>
                                 {user?.name}
                             </Text>
-                            <Image
-                                source={{ uri: user?.imageURL ?? '' }}
-                                style={styles.userImage}
-                            />
+                            <UserImage url={user?.imageURL ?? ''} />
                         </View>
                     ) : null}
                 </View>

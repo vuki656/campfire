@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
 export const HomeCampfireGroup = (props: HomeCampfireGroupProps) => {
     const { campfires, title } = props
 
-    if (!campfires.length) {
+    if (!campfires?.length) {
         return null
     }
 
