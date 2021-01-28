@@ -8,6 +8,8 @@ export default {
         mPlus: 'MPlus',
     },
     fontSize: {
+        annotation: 10,
+        subtitle: 20,
         text: 12,
         title: 25,
     },

@@ -8,15 +8,17 @@ import {
     View,
 } from 'react-native'
 
+import theme from '../../../lib/variables/theme'
+
 import type { HomeCampfireCardProps } from './HomeCampfireCard.types'
 
 const styles = StyleSheet.create({
     createdBy: {
-        fontFamily: 'MPlus',
-        fontSize: 10,
+        fontFamily: theme.fontFamily.mPlus,
+        fontSize: theme.fontSize.annotation,
     },
     emoji: {
-        fontSize: 20,
+        fontSize: theme.fontSize.subtitle,
     },
     header: {
         alignItems: 'center',
@@ -26,8 +28,8 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     root: {
-        backgroundColor: 'white',
-        borderColor: 'black',
+        backgroundColor: theme.color.white,
+        borderColor: theme.color.black,
         borderRadius: 5,
         borderWidth: 4,
         display: 'flex',
@@ -37,8 +39,8 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     title: {
-        fontFamily: 'MPlus',
-        fontSize: 20,
+        fontFamily: theme.fontFamily.mPlus,
+        fontSize: theme.fontSize.subtitle,
         marginLeft: 10,
     },
 })

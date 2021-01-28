@@ -20,11 +20,12 @@ const styles = StyleSheet.create({
     root: {
         display: 'flex',
         flexDirection: 'column',
-        padding: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
     },
     title: {
         fontFamily: theme.fontFamily.mPlus,
-        fontSize: 30,
+        fontSize: theme.fontSize.title,
         marginBottom: 20,
     },
 })
