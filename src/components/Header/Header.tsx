@@ -1,26 +1,24 @@
 import * as React from 'react'
 import {
-    Image,
     StyleSheet,
-    Text,
     View,
 } from 'react-native'
 
-import { HomeNewCampfireDialog } from '../../modules/Home/HomeNewCampfireDialog'
+import theme from '../../lib/variables/theme'
 
 import type { HeaderProps } from './Header.types'
 
 const styles = StyleSheet.create({
     root: {
         alignItems: 'center',
-        backgroundColor: '#ffffff',
+        backgroundColor: theme.color.white,
         display: 'flex',
         elevation: 6,
         flexDirection: 'row',
         height: 50,
         justifyContent: 'space-between',
         paddingHorizontal: 10,
-        shadowColor: '#000',
+        shadowColor: theme.color.gray100,
         shadowOffset: {
             height: 3,
             width: 0,
@@ -33,8 +31,22 @@ const styles = StyleSheet.create({
 export const Header = (props: HeaderProps) => {
     const { leftNode, rightNode } = props
 
+    const getSpacing = () => {
+        if (leftNode && rightNode) {
+            return 'space-between'
+        } else if (leftNode && !rightNode) {
+            return 'flex-start'
+        } else {
+            return 'flex-end'
+        }
+    }
+
     return (
-        <View style={styles.root}>
+        <View
+            style={[styles.root, {
+                justifyContent: getSpacing(),
+            }]}
+        >
             {leftNode}
             {rightNode}
         </View>

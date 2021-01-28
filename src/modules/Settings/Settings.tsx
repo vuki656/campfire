@@ -1,35 +1,41 @@
 import * as firebase from 'firebase'
 import * as React from 'react'
 import {
-    Button,
     StyleSheet,
-    Text,
     View,
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+
+import {
+    Button,
+    Header,
+    HeaderTitle,
+} from '../../components'
 
 const styles = StyleSheet.create({
     root: {
-        alignItems: 'center',
-        flex: 1,
-        justifyContent: 'center',
         padding: 20,
     },
 })
 
 export const Settings = () => {
-    const logout = () => {
+    const handleLogout = () => {
         void firebase.auth().signOut()
     }
 
     return (
-        <View style={styles.root}>
-            <Button
-                onPress={logout}
-                title="Logout"
+        <SafeAreaView>
+            <Header
+                leftNode={
+                    <HeaderTitle title="Settings" />
+                }
             />
-            <Text>
-                Settings
-            </Text>
-        </View>
+            <View style={styles.root}>
+                <Button
+                    label="Logout"
+                    onPress={handleLogout}
+                />
+            </View>
+        </SafeAreaView>
     )
 }

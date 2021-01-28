@@ -10,7 +10,7 @@ export const useCurrentUser = () => {
 
     const [user, setUser] = React.useState<UserType>({
         id: firebaseUser?.uid ?? '',
-        imageURL: firebaseUser?.displayName ?? '',
+        imageURL: firebaseUser?.photoURL ?? '',
         memberOf: [],
         name: firebaseUser?.displayName ?? '',
     })

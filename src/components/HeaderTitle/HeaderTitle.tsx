@@ -38,7 +38,7 @@ export const HeaderTitle = (props: HeaderTitleProps) => {
                 </Text>
             ) : null}
             <Text style={styles.headerTitleText}>
-                {name}
+                {title}
             </Text>
         </View>
     )

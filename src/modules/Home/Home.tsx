@@ -7,14 +7,18 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { UserImage } from '../../components'
-import { Header } from '../../components/Header'
-import { Collections } from '../../lib/Collections'
-import { connection } from '../../lib/connection'
-import { useCurrentUser } from '../../lib/getCurrentUser'
+import {
+    Header,
+    UserImage,
+} from '../../components'
+import {
+    Collections,
+    connection,
+    useCurrentUser,
+} from '../../lib'
 import theme from '../../lib/variables/theme'
 import type { CampfireType } from '../Campfire'
-import type { UserType } from '../Login/Login.types'
+import type { UserType } from '../Login'
 
 import { HomeCampfireGroup } from './HomeCampfireGroup'
 import { HomeNewCampfireDialog } from './HomeNewCampfireDialog'
@@ -31,14 +35,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         padding: 20,
     },
-    userImage: {
-        borderColor: theme.color.black,
-        borderRadius: 100,
-        borderWidth: 4,
-        height: 40,
-        marginLeft: 20,
-        width: 40,
-    },
     userInfo: {
         alignItems: 'center',
         display: 'flex',
@@ -47,6 +43,7 @@ const styles = StyleSheet.create({
     },
     username: {
         fontFamily: theme.fontFamily.mPlus,
+        marginRight: 10,
     },
 })
 

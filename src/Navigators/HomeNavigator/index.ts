@@ -1,2 +1,2 @@
-export * from './HomeScreen'
-export * from './HomeScreen.types'
+export * from './HomeNavigator'
+export * from './HomeNavigator.types'

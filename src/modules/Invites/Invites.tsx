@@ -1,11 +1,10 @@
-import firebase from 'firebase'
 import * as React from 'react'
 import {
-    SafeAreaView,
     StyleSheet,
     Text,
     View,
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 import {
     Button,
@@ -14,39 +13,47 @@ import {
 } from '../../components'
 import {
     Collections,
+    connection,
     useCurrentUser,
 } from '../../lib'
+import theme from '../../lib/variables/theme'
 
 import type { InviteType } from './Invites.types'
 
 const styles = StyleSheet.create({
-    cancelButton: {
-        marginRight: 5,
+    button: {
+        width: 150,
     },
     invite: {
         alignItems: 'center',
+        borderColor: theme.color.black,
+        borderRadius: 5,
+        borderWidth: 3,
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 15,
     },
     inviteActions: {
         alignItems: 'center',
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
+        marginTop: 20,
+        width: '100%',
     },
     invitePerson: {
         fontWeight: 'bold',
+        textAlign: 'center',
     },
     inviteTitle: {
         fontFamily: 'MPlus',
         fontSize: 30,
+        textAlign: 'center',
     },
     root: {
         padding: 20,
-    },
-    safeAreaView: {
-        height: '100%',
     },
 })
 
@@ -56,9 +63,7 @@ export const Invites: React.FunctionComponent = () => {
     const [invites, setInvites] = React.useState<InviteType[]>([])
 
     const fetchInvites = () => {
-        void firebase
-            .firestore()
-            .collection(Collections.INVITES)
+        void connection(Collections.INVITES)
             .where('to.id', '==', user?.id)
             .get()
             .then((results) => {
@@ -79,9 +84,7 @@ export const Invites: React.FunctionComponent = () => {
     }, [])
 
     const deleteInvite = (inviteId: string) => {
-        void firebase
-            .firestore()
-            .collection(Collections.INVITES)
+        void connection(Collections.INVITES)
             .doc(inviteId)
             .delete()
             .then(() => {
@@ -94,9 +97,7 @@ export const Invites: React.FunctionComponent = () => {
     }
 
     const handleInviteAccept = (invite: InviteType) => () => {
-        void firebase
-            .firestore()
-            .collection(Collections.USERS)
+        void connection(Collections.USERS)
             .doc(user?.id)
             .update({
                 memberOf: [...user?.memberOf ?? [], invite.campfire ],
@@ -107,10 +108,10 @@ export const Invites: React.FunctionComponent = () => {
     }
 
     return (
-        <SafeAreaView style={styles.safeAreaView}>
+        <SafeAreaView>
             <View>
                 <Header
-                    rightNode={
+                    leftNode={
                         <HeaderTitle title="Campfire Invites" />
                     }
                 />
@@ -139,11 +140,13 @@ export const Invites: React.FunctionComponent = () => {
                                     <Button
                                         label="✖"
                                         onPress={handleInviteCancel(invite.id)}
-                                        style={styles.cancelButton}
+                                        style={styles.button}
                                     />
                                     <Button
                                         label="✔"
                                         onPress={handleInviteAccept(invite)}
+                                        style={styles.button}
+                                        variant="secondary"
                                     />
                                 </View>
                             </View>

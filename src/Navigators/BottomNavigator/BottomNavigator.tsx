@@ -9,7 +9,7 @@ import {
 import theme from '../../lib/variables/theme'
 import { Invites } from '../../modules/Invites'
 import { Settings } from '../../modules/Settings'
-import { HomeScreen } from '../HomeNavigator'
+import { HomeNavigator } from '../HomeNavigator'
 
 const styles = StyleSheet.create({
     tabIcon: {
@@ -34,33 +34,36 @@ export const BottomNavigator = () => {
                 screenOptions={(props) => ({
                     tabBarIcon: () => {
                         switch (props.route.name) {
-                            case Tabs.HOME:
+                            case Tabs.HOME: {
                                 return (
                                     <Image
                                         source={require('../../../assets/screens/global/logs.png')}
                                         style={styles.tabIcon}
                                     />
                                 )
-                            case Tabs.INVITES:
+                            }
+                            case Tabs.INVITES: {
                                 return (
                                     <Image
                                         source={require('../../../assets/screens/global/email.png')}
                                         style={styles.tabIcon}
                                     />
                                 )
-                            case Tabs.SETTINGS:
+                            }
+                            case Tabs.SETTINGS: {
                                 return (
                                     <Image
                                         source={require('../../../assets/screens/global/axe.png')}
                                         style={styles.tabIcon}
                                     />
                                 )
+                            }
                         }
                     },
                 })}
                 tabBarOptions={{
-                    activeTintColor: 'black',
-                    inactiveTintColor: '#cccccc',
+                    activeTintColor: theme.color.black,
+                    inactiveTintColor: theme.color.gray500,
                     labelStyle: {
                         fontFamily: theme.fontFamily.mPlus,
                     },
@@ -73,7 +76,7 @@ export const BottomNavigator = () => {
                 }}
             >
                 <Tab.Screen
-                    component={HomeScreen}
+                    component={HomeNavigator}
                     name={Tabs.HOME}
                 />
                 <Tab.Screen

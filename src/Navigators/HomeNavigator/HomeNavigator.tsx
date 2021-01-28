@@ -5,11 +5,11 @@ import { Campfire } from '../../modules/Campfire'
 import { CampfireInvite } from '../../modules/Campfire/CampfireInvite'
 import { Home } from '../../modules/Home'
 
-import type { RootStackParamList } from './HomeScreen.types'
+import type { RootStackParamList } from './HomeNavigator.types'
 
 const Stack = createStackNavigator<RootStackParamList>()
 
-export const HomeScreen = () => {
+export const HomeNavigator = () => {
     return (
         <Stack.Navigator initialRouteName="Home">
             <Stack.Screen
