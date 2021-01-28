@@ -9,7 +9,6 @@ import theme from '../../lib/variables/theme'
 import type { UserImageProps } from './UserImage.types'
 
 const styles = StyleSheet.create({
-
     userImage: {
         borderColor: theme.color.black,
         borderRadius: 100,
@@ -17,7 +16,6 @@ const styles = StyleSheet.create({
         height: 40,
         width: 40,
     },
-
 })
 
 export const UserImage = (props: UserImageProps) => {

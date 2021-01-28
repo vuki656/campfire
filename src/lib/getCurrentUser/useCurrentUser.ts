@@ -1,7 +1,7 @@
 import firebase from 'firebase'
 import React from 'react'
 
-import type { UserType } from '../../modules/Login/Login.types'
+import type { UserType } from '../../modules/Login'
 import { Collections } from '../Collections'
 import { connection } from '../connection'
 

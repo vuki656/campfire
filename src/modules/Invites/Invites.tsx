@@ -7,42 +7,21 @@ import {
     View,
 } from 'react-native'
 
-import { Button } from '../../components/Button'
-import { Collections } from '../../lib/Collections'
-import { useCurrentUser } from '../../lib/getCurrentUser'
+import {
+    Button,
+    Header,
+    HeaderTitle,
+} from '../../components'
+import {
+    Collections,
+    useCurrentUser,
+} from '../../lib'
 
 import type { InviteType } from './Invites.types'
 
 const styles = StyleSheet.create({
     cancelButton: {
-        backgroundColor: 'white',
         marginRight: 5,
-    },
-    headerBar: {
-        alignItems: 'center',
-        backgroundColor: 'white',
-        elevation: 6,
-        flexDirection: 'row',
-        height: 50,
-        justifyContent: 'flex-end',
-        marginTop: 50, // TODO: FIX
-        paddingHorizontal: 15,
-        shadowColor: '#000',
-        shadowOffset: {
-            height: 3,
-            width: 0,
-        },
-        shadowOpacity: 0.27,
-        shadowRadius: 4.65,
-        width: '100%',
-    },
-    headerTitle: {
-        alignItems: 'center',
-        flexDirection: 'row',
-    },
-    headerTitleText: {
-        fontFamily: 'MPlus',
-        fontSize: 20,
     },
     invite: {
         alignItems: 'center',
@@ -77,21 +56,21 @@ export const Invites: React.FunctionComponent = () => {
     const [invites, setInvites] = React.useState<InviteType[]>([])
 
     const fetchInvites = () => {
-        setInvites([])
-
         void firebase
             .firestore()
             .collection(Collections.INVITES)
             .where('to.id', '==', user?.id)
             .get()
-            .then((result) => {
-                result.forEach((singleResult) => {
-                    const invite = singleResult.data() as InviteType
+            .then((results) => {
+                const fetchedInvites: InviteType[] = []
 
-                    setInvites((currentInvites) => {
-                        return [...currentInvites, invite]
-                    })
+                results.forEach((result) => {
+                    const fetchedInvite = result.data() as InviteType
+
+                    fetchedInvites.push(fetchedInvite)
                 })
+
+                setInvites(fetchedInvites)
             })
     }
 
@@ -130,13 +109,11 @@ export const Invites: React.FunctionComponent = () => {
     return (
         <SafeAreaView style={styles.safeAreaView}>
             <View>
-                <View style={styles.headerBar}>
-                    <View style={styles.headerTitle}>
-                        <Text style={styles.headerTitleText}>
-                            Campfire Invites
-                        </Text>
-                    </View>
-                </View>
+                <Header
+                    rightNode={
+                        <HeaderTitle title="Campfire Invites" />
+                    }
+                />
                 <View style={styles.root}>
                     {invites.map((invite) => {
                         return (
