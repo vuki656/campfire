@@ -9,9 +9,15 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { Button } from '../../components/Button'
-import { Collections } from '../../lib/Collections'
-import { useCurrentUser } from '../../lib/getCurrentUser'
+import {
+    Button,
+    Header,
+} from '../../components'
+import {
+    Collections,
+    useCurrentUser,
+} from '../../lib'
+import theme from '../../lib/variables/theme'
 
 import type {
     CampfireProps,
@@ -22,29 +28,12 @@ import { CampfireLogCard } from './CampfireLogCard/CampfireLogCard'
 
 const styles = StyleSheet.create({
     backButton: {
-        backgroundColor: 'white',
+        backgroundColor: theme.color.white,
         height: 30,
         width: 100,
     },
-    headerBar: {
-        alignItems: 'center',
-        backgroundColor: 'white',
-        elevation: 6,
-        flexDirection: 'row',
-        height: 50,
-        justifyContent: 'space-between',
-        paddingHorizontal: 15,
-        shadowColor: '#000',
-        shadowOffset: {
-            height: 3,
-            width: 0,
-        },
-        shadowOpacity: 0.27,
-        shadowRadius: 4.65,
-        width: '100%',
-    },
     headerEmoji: {
-        fontSize: 20,
+        fontSize: theme.fontSize.subtitle,
         marginRight: 10,
     },
     headerTitle: {
@@ -52,11 +41,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     headerTitleText: {
-        fontFamily: 'MPlus',
-        fontSize: 20,
+        fontFamily: theme.fontFamily.mPlus,
+        fontSize: theme.fontSize.subtitle,
     },
     inviteButton: {
-        backgroundColor: 'white',
+        backgroundColor: theme.color.white,
         height: 30,
         marginBottom: 20,
         width: 150,
@@ -93,21 +82,21 @@ export const Campfire = (props: CampfireProps) => {
     } = route.params.campfire
 
     const fetchLogs = () => {
-        setLogs([])
-
         void firebase
             .firestore()
             .collection(Collections.LOGS)
             .where('metadata.campfire.id', '==', id)
             .get()
             .then((result) => {
-                result.forEach((singleResult) => {
-                    const log = singleResult.data() as LogType
+                const fetchedLogs: LogType[] = []
 
-                    setLogs((currentLogs) => {
-                        return [...currentLogs, log]
-                    })
+                result.forEach((singleResult) => {
+                    const fetchedLog = singleResult.data() as LogType
+
+                    fetchedLogs.push(fetchedLog)
                 })
+
+                setLogs(fetchedLogs)
             })
 
     }
@@ -118,21 +107,25 @@ export const Campfire = (props: CampfireProps) => {
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
-            <View style={styles.headerBar}>
-                <Button
-                    label="Back"
-                    onPress={handleBack}
-                    style={styles.backButton}
-                />
-                <View style={styles.headerTitle}>
-                    <Text style={styles.headerEmoji}>
-                        {emoji}
-                    </Text>
-                    <Text style={styles.headerTitleText}>
-                        {name}
-                    </Text>
-                </View>
-            </View>
+            <Header
+                leftNode={(
+                    <Button
+                        label="Back"
+                        onPress={handleBack}
+                        style={styles.backButton}
+                    />
+                )}
+                rightNode={(
+                    <View style={styles.headerTitle}>
+                        <Text style={styles.headerEmoji}>
+                            {emoji}
+                        </Text>
+                        <Text style={styles.headerTitleText}>
+                            {name}
+                        </Text>
+                    </View>
+                )}
+            />
             <View style={styles.root}>
                 {author.id === user?.id ? (
                     <Button

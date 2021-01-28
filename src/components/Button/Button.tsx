@@ -1,10 +1,11 @@
 import React from 'react'
-import type { TextStyle } from 'react-native'
 import {
     StyleSheet,
     Text,
     TouchableOpacity,
 } from 'react-native'
+
+import theme from '../../lib/variables/theme'
 
 import type { ButtonProps } from './Button.types'
 
@@ -32,6 +33,7 @@ export const Button = (props: ButtonProps) => {
     const {
         label,
         startIcon,
+        variant = 'primary',
         labelFontSize = 18,
         style: stylesProp,
         ...other
@@ -39,11 +41,18 @@ export const Button = (props: ButtonProps) => {
 
     return (
         <TouchableOpacity
-            style={StyleSheet.compose<TextStyle>(styles.root, stylesProp)}
+            style={[
+                styles.root,
+                stylesProp, {
+                    backgroundColor: variant === 'secondary'
+                        ? theme.color.orange
+                        : theme.color.white,
+                },
+            ]}
             {...other}
         >
             {startIcon ? startIcon : null}
-            <Text style={StyleSheet.compose<TextStyle>(styles.label, { fontSize: labelFontSize })}>
+            <Text style={[styles.label, { fontSize: labelFontSize }]}>
                 {label}
             </Text>
         </TouchableOpacity>

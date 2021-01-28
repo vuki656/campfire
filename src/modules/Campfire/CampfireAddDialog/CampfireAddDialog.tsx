@@ -1,10 +1,8 @@
 import cuid from 'cuid'
-import firebase from 'firebase'
 import { useFormik } from 'formik'
 import * as React from 'react'
 import {
     Image,
-    Modal,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -13,10 +11,20 @@ import {
 import useToggle from 'react-use/lib/useToggle'
 import * as Yup from 'yup'
 
-import { Button } from '../../../components/Button'
-import { TextField } from '../../../components/TextField'
-import { Collections } from '../../../lib/Collections'
-import { useCurrentUser } from '../../../lib/getCurrentUser'
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogHeader,
+    TextField,
+} from '../../../components'
+import {
+    Collections,
+    connection,
+    useCurrentUser,
+} from '../../../lib'
+import theme from '../../../lib/variables/theme'
 
 import type {
     CampfireAddDialogProps,
@@ -24,17 +32,10 @@ import type {
 } from './CampfireAddDialog.types'
 
 const styles = StyleSheet.create({
-    bottomActions: {
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginTop: 10,
-    },
     button: {
         alignItems: 'center',
-        backgroundColor: 'white',
-        borderColor: 'black',
+        backgroundColor: theme.color.white,
+        borderColor: theme.color.black,
         borderRadius: 7,
         borderWidth: 4,
         display: 'flex',
@@ -42,82 +43,24 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 10,
     },
-    buttonImage: {
-        height: 30,
-        width: 25,
-    },
-    buttonText: {
-        fontFamily: 'MPlus',
-        fontSize: 20,
-        marginLeft: 5,
-    },
-    cancelButton: {
-        backgroundColor: 'white',
-    },
-    modalContainer: {
-        alignItems: 'center',
-        backgroundColor: '#ffffffa8',
-        flex: 1,
-        justifyContent: 'center',
-    },
-    modalHeader: {
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginBottom: 10,
-    },
-    modalHeaderIcon: {
+    headerIcon: {
         height: 30,
         marginRight: 10,
         width: 30,
     },
-    modalHeaderTitle: {
-        fontFamily: 'MPlus',
-        fontSize: 25,
+    toggleButtonIcon: {
+        height: 30,
+        width: 25,
     },
-    modalHeaderTitleContainer: {
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'row',
+    toggleButtonText: {
+        fontFamily: theme.fontFamily.mPlus,
+        fontSize: theme.fontSize.subtitle,
+        marginLeft: 5,
     },
-    modalRoot: {
-        backgroundColor: 'white',
-        borderColor: 'black',
-        borderRadius: 10,
-        borderWidth: 4,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        paddingHorizontal: 35,
-        paddingVertical: 25,
-        width: '80%',
-    },
-    root: {
+    toggleButtonTouchableOpacity: {
         bottom: 20,
         position: 'absolute',
         right: 30,
-    },
-    textArea: {
-        textAlignVertical: 'top',
-    },
-    textField: {
-        width: '70%',
-    },
-    textStyle: {
-        color: 'white',
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-    toggleButton: {
-        backgroundColor: 'white',
-        height: 30,
-        width: 130,
-    },
-    toggleButtonIcon: {
-        height: 15,
-        marginRight: 5,
-        width: 15,
     },
 })
 
@@ -133,9 +76,8 @@ const ValidationSchema = Yup.object()
 export const CampfireAddDialog = (props: CampfireAddDialogProps) => {
     const { id } = props
 
-    const [isDialogOpen, toggleDialog] = useToggle(false)
-
     const user = useCurrentUser()
+    const [isDialogOpen, toggleDialog] = useToggle(false)
 
     const form = useFormik<NewLogFormTypes>({
         initialValues: {
@@ -145,9 +87,7 @@ export const CampfireAddDialog = (props: CampfireAddDialogProps) => {
         onSubmit: (formValues) => {
             const logId = cuid()
 
-            void firebase
-                .firestore()
-                .collection(Collections.LOGS)
+            void connection(Collections.LOGS)
                 .doc(logId)
                 .set({
                     description: formValues.description,
@@ -177,73 +117,64 @@ export const CampfireAddDialog = (props: CampfireAddDialogProps) => {
         <>
             <TouchableOpacity
                 onPress={toggleDialog}
-                style={styles.root}
+                style={styles.toggleButtonTouchableOpacity}
             >
                 <View style={styles.button}>
                     <Image
                         resizeMode="contain"
                         source={require('../../../../assets/screens/campfire/log.png')}
-                        style={styles.buttonImage}
+                        style={styles.toggleButtonIcon}
                     />
-                    <Text style={styles.buttonText}>
+                    <Text style={styles.toggleButtonText}>
                         New
                     </Text>
                 </View>
             </TouchableOpacity>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={isDialogOpen}
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalRoot}>
-                        <View style={styles.modalHeader}>
-                            <Image
-                                source={require('../../../../assets/screens/campfire/log.png')}
-                                style={styles.modalHeaderIcon}
-                            />
-                            <Text style={styles.modalHeaderTitle}>
-                                New Log
-                            </Text>
-                        </View>
-                        <TextField
-                            error={Boolean(form.errors.link)}
-                            fullWidth={true}
-                            helperText={form.errors.link}
-                            label="Link"
-                            onChangeText={form.handleChange('link')}
-                            required={true}
-                            style={styles.textField}
-                            value={form.values.link}
+            <Dialog isOpen={isDialogOpen}>
+                <DialogHeader
+                    startIcon={(
+                        <Image
+                            source={require('../../../../assets/screens/campfire/log.png')}
+                            style={styles.headerIcon}
                         />
-                        <TextField
-                            error={Boolean(form.errors.description)}
-                            fullWidth={true}
-                            helperText={form.errors.description}
-                            label="Description"
-                            multiline={true}
-                            numberOfLines={4}
-                            onChangeText={form.handleChange('description')}
-                            style={[styles.textField, styles.textArea]}
-                            value={form.values.description}
-                        />
-
-                        <View style={styles.bottomActions}>
-                            <Button
-                                label="Cancel"
-                                onPress={toggleDialog}
-                                style={styles.cancelButton}
-                            />
-                            <Button
-                                label="Create"
-                                onPress={() => {
-                                    form.handleSubmit()
-                                }}
-                            />
-                        </View>
-                    </View>
-                </View>
-            </Modal>
+                    )}
+                    title="New Log"
+                />
+                <DialogContent>
+                    <TextField
+                        error={Boolean(form.errors.link)}
+                        fullWidth={true}
+                        helperText={form.errors.link}
+                        label="Link"
+                        onChangeText={form.handleChange('link')}
+                        required={true}
+                        value={form.values.link}
+                    />
+                    <TextField
+                        error={Boolean(form.errors.description)}
+                        fullWidth={true}
+                        helperText={form.errors.description}
+                        label="Description"
+                        multiline={true}
+                        numberOfLines={4}
+                        onChangeText={form.handleChange('description')}
+                        value={form.values.description}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        label="Cancel"
+                        onPress={toggleDialog}
+                    />
+                    <Button
+                        label="Create"
+                        onPress={() => {
+                            form.handleSubmit()
+                        }}
+                        variant="secondary"
+                    />
+                </DialogActions>
+            </Dialog>
         </>
     )
 }
