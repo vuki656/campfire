@@ -18,7 +18,7 @@ export default function App() {
     const isUserAuthenticated = useUserAuthentication()
     const fontsLoaded = useFontsInitialization()
 
-    if (!fontsLoaded) {
+    if (!fontsLoaded || typeof isUserAuthenticated === 'undefined') {
         return null
     }
 
