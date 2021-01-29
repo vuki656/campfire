@@ -7,7 +7,6 @@ import {
     Text,
     View,
 } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 
 import {
     Button,
@@ -39,9 +38,6 @@ const styles = StyleSheet.create({
     },
     list: {
         padding: 20,
-    },
-    safeAreaView: {
-        height: '100%',
     },
     userContainer: {
         alignItems: 'center',
@@ -143,7 +139,7 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
     }
 
     return (
-        <SafeAreaView style={styles.safeAreaView}>
+        <View>
             <Header
                 leftNode={(
                     <Button
@@ -194,6 +190,6 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
                     })}
                 </ScrollView>
             </View>
-        </SafeAreaView>
+        </View>
     )
 }

@@ -7,7 +7,6 @@ import {
     Text,
     View,
 } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 
 import {
     Button,
@@ -55,10 +54,8 @@ const styles = StyleSheet.create({
         width: 150,
     },
     root: {
+        height: '85%',
         padding: 20,
-    },
-    safeAreaView: {
-        height: '100%',
     },
 })
 
@@ -109,7 +106,7 @@ export const Campfire = (props: CampfireProps) => {
     }, [])
 
     return (
-        <SafeAreaView style={styles.safeAreaView}>
+        <View>
             <Header
                 leftNode={(
                     <Button
@@ -152,6 +149,6 @@ export const Campfire = (props: CampfireProps) => {
                 </ScrollView>
             </View>
             <CampfireAddDialog id={id} />
-        </SafeAreaView>
+        </View>
     )
 }

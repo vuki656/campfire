@@ -4,7 +4,6 @@ import {
     StyleSheet,
     View,
 } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 
 import {
     Button,
@@ -24,7 +23,7 @@ export const Settings = () => {
     }
 
     return (
-        <SafeAreaView>
+        <View>
             <Header
                 leftNode={
                     <HeaderTitle title="Settings" />
@@ -36,6 +35,6 @@ export const Settings = () => {
                     onPress={handleLogout}
                 />
             </View>
-        </SafeAreaView>
+        </View>
     )
 }

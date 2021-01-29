@@ -4,7 +4,6 @@ import {
     Text,
     View,
 } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 
 import {
     Button,
@@ -108,52 +107,50 @@ export const Invites: React.FunctionComponent = () => {
     }
 
     return (
-        <SafeAreaView>
-            <View>
-                <Header
-                    leftNode={
-                        <HeaderTitle title="Campfire Invites" />
-                    }
-                />
-                <View style={styles.root}>
-                    {invites.map((invite) => {
-                        return (
-                            <View
-                                key={invite.id}
-                                style={styles.invite}
-                            >
-                                <View>
-                                    <Text style={styles.inviteTitle}>
-                                        {invite.campfire.name}
+        <View>
+            <Header
+                leftNode={
+                    <HeaderTitle title="Campfire Invites" />
+                }
+            />
+            <View style={styles.root}>
+                {invites.map((invite) => {
+                    return (
+                        <View
+                            key={invite.id}
+                            style={styles.invite}
+                        >
+                            <View>
+                                <Text style={styles.inviteTitle}>
+                                    {invite.campfire.name}
+                                </Text>
+                                <Text>
+                                    <Text style={styles.invitePerson}>
+                                        {invite.from.name}
                                     </Text>
                                     <Text>
-                                        <Text style={styles.invitePerson}>
-                                            {invite.from.name}
-                                        </Text>
-                                        <Text>
-                                            {' '}
-                                            has invited you
-                                        </Text>
+                                        {' '}
+                                        has invited you
                                     </Text>
-                                </View>
-                                <View style={styles.inviteActions}>
-                                    <Button
-                                        label="✖"
-                                        onPress={handleInviteCancel(invite.id)}
-                                        style={styles.button}
-                                    />
-                                    <Button
-                                        label="✔"
-                                        onPress={handleInviteAccept(invite)}
-                                        style={styles.button}
-                                        variant="secondary"
-                                    />
-                                </View>
+                                </Text>
                             </View>
-                        )
-                    })}
-                </View>
+                            <View style={styles.inviteActions}>
+                                <Button
+                                    label="✖"
+                                    onPress={handleInviteCancel(invite.id)}
+                                    style={styles.button}
+                                />
+                                <Button
+                                    label="✔"
+                                    onPress={handleInviteAccept(invite)}
+                                    style={styles.button}
+                                    variant="secondary"
+                                />
+                            </View>
+                        </View>
+                    )
+                })}
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
