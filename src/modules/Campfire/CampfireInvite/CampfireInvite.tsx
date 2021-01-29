@@ -161,7 +161,7 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
                     {users.map((user) => {
                         const isUserOwner = user.id === currentUser?.id
 
-                        const isUserAMember = user.memberOf.some((joinedCampfire) => {
+                        const isUserAMember = user.memberOf?.some((joinedCampfire) => {
                             return joinedCampfire.id === id
                         })
 

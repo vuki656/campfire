@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
         fontFamily: theme.fontFamily.mPlus,
         fontSize: theme.fontSize.subtitle,
         marginLeft: 10,
+        width: '90%',
     },
 })
 
@@ -62,7 +63,10 @@ export const HomeCampfireCard = (props: HomeCampfireCardProps) => {
                 <Text style={styles.emoji}>
                     {campfire.emoji}
                 </Text>
-                <Text style={styles.title}>
+                <Text
+                    numberOfLines={1}
+                    style={styles.title}
+                >
                     {campfire.name}
                 </Text>
             </View>

@@ -35,14 +35,18 @@ const styles = StyleSheet.create({
     headerEmoji: {
         fontSize: theme.fontSize.subtitle,
         marginRight: 10,
+        textAlign: 'right',
     },
     headerTitle: {
         alignItems: 'center',
         flexDirection: 'row',
+        justifyContent: 'flex-end',
+        maxWidth: 150,
     },
     headerTitleText: {
         fontFamily: theme.fontFamily.mPlus,
         fontSize: theme.fontSize.subtitle,
+        textAlign: 'left',
     },
     inviteButton: {
         backgroundColor: theme.color.white,
@@ -119,7 +123,10 @@ export const Campfire = (props: CampfireProps) => {
                         <Text style={styles.headerEmoji}>
                             {emoji}
                         </Text>
-                        <Text style={styles.headerTitleText}>
+                        <Text
+                            numberOfLines={1}
+                            style={styles.headerTitleText}
+                        >
                             {name}
                         </Text>
                     </View>

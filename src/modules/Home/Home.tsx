@@ -68,8 +68,25 @@ export const Home = () => {
             })
     }
 
+    const initializeListener = () => {
+        void connection(Collections.CAMPFIRES)
+            .where('author.id', '==', user?.id)
+            .onSnapshot((latestResults) => {
+                const fetchedCampfires: CampfireType[] = []
+
+                latestResults.forEach((result) => {
+                    const fetchedCampfire = result.data() as CampfireType
+
+                    fetchedCampfires.push(fetchedCampfire)
+                })
+
+                setOwnedCampfires(fetchedCampfires)
+            })
+    }
+
     React.useEffect(() => {
         fetchOwnedCampfires()
+        initializeListener()
     }, [])
 
     return (
@@ -100,7 +117,7 @@ export const Home = () => {
                     title="Your Campfires"
                 />
                 <HomeCampfireGroup
-                    campfires={user.memberOf}
+                    campfires={user?.memberOf}
                     title="Joined Campfires"
                 />
             </View>
