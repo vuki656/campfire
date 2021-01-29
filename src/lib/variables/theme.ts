@@ -3,8 +3,9 @@
 export default {
     color: {
         black: 'black',
-        gray100: '#000000',
         gray: '#8a8a8a',
+        gray100: '#000000',
+        gray300: '#eff3f6',
         gray500: '#cccccc',
         white: 'white',
         orange: '#f78e00',

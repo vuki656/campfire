@@ -10,7 +10,6 @@ export const useUserAuthentication = () => {
             .onAuthStateChanged((user) => {
                 setIsUserAuthenticated(Boolean(user))
             })
-
     }, [])
 
     return isUserAuthenticated

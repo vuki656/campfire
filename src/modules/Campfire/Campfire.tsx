@@ -98,7 +98,6 @@ export const Campfire = (props: CampfireProps) => {
 
                 setLogs(fetchedLogs)
             })
-
     }
 
     React.useEffect(() => {

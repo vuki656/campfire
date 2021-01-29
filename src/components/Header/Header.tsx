@@ -29,9 +29,12 @@ const styles = StyleSheet.create({
 })
 
 export const Header = (props: HeaderProps) => {
-    const { leftNode, rightNode } = props
+    const {
+        leftNode,
+        rightNode,
+    } = props
 
-    const getSpacing = () => {
+    const getPosition = () => {
         if (leftNode && rightNode) {
             return 'space-between'
         } else if (leftNode && !rightNode) {
@@ -44,7 +47,7 @@ export const Header = (props: HeaderProps) => {
     return (
         <View
             style={[styles.root, {
-                justifyContent: getSpacing(),
+                justifyContent: getPosition(),
             }]}
         >
             {leftNode}

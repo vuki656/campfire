@@ -3,12 +3,9 @@ import { useFormik } from 'formik'
 import * as React from 'react'
 import {
     Image,
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
+    ScrollView,
     StyleSheet,
     Text,
-    TouchableWithoutFeedback,
     View,
 } from 'react-native'
 import {
@@ -18,9 +15,15 @@ import {
 } from 'unique-names-generator'
 import * as Yup from 'yup'
 
-import { Button } from '../../components/Button'
-import { TextField } from '../../components/TextField'
-import { Collections } from '../../lib/Collections'
+import {
+    Button,
+    TextField,
+} from '../../components'
+import {
+    Collections,
+    connection,
+} from '../../lib'
+import theme from '../../lib/variables/theme'
 
 import type {
     DuckImageResponseType,
@@ -31,42 +34,40 @@ import type {
 const styles = StyleSheet.create({
     form: {
         alignItems: 'center',
-        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
+        marginTop: 30,
+        paddingVertical: 50,
         width: '100%',
     },
     image: {
         height: 200,
-        marginBottom: 40,
+        marginTop: 120,
         resizeMode: 'contain',
         width: 200,
     },
-    keyboardAvoidingViewContainer: {
-        flex: 1,
-    },
     noteContainer: {
-        backgroundColor: '#eff3f6',
+        backgroundColor: theme.color.gray300,
         borderRadius: 10,
+        marginTop: 40,
         padding: 20,
         width: '70%',
     },
     noteText: {
-        color: '#8a8a8a',
-        fontFamily: 'MPlus',
-        fontSize: 10,
+        color: theme.color.gray,
+        fontFamily: theme.fontFamily.mPlus,
+        fontSize: theme.fontSize.caption,
         textAlign: 'center',
     },
     root: {
         alignItems: 'center',
-        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
-        padding: 20,
     },
     submitButton: {
         marginTop: 20,
-    },
-    textField: {
-        width: '70%',
     },
 })
 
@@ -90,8 +91,13 @@ export const Login = () => {
                 return response.json()
             })
             .then((duckImageResponse: DuckImageResponseType) => {
-                // TODO: IF ENDS WITH .GIF, FETCH AGAIN
-                duckImageLink = duckImageResponse.url
+                const imageURL = duckImageResponse.url
+
+                if (imageURL.endsWith('.gif')) {
+                    void fetchDuckPhoto()
+                } else {
+                    duckImageLink = duckImageResponse.url
+                }
             })
 
         return duckImageLink
@@ -113,9 +119,7 @@ export const Login = () => {
             id,
         } = user
 
-        void firebase
-            .firestore()
-            .collection(Collections.USERS)
+        void connection(Collections.USERS)
             .doc(id)
             .set({
                 id: id,
@@ -177,7 +181,6 @@ export const Login = () => {
         } else {
             registerUser(formValues)
         }
-
     }
 
     const form = useFormik<LoginFormTypes>({
@@ -193,54 +196,45 @@ export const Login = () => {
     })
 
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.keyboardAvoidingViewContainer}
-        >
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={styles.root}>
-                    <View style={styles.form}>
-                        <Image
-                            source={require('../../../assets/screens/login/logo.png')}
-                            style={styles.image}
-                        />
-                        <TextField
-                            autoCapitalize="none"
-                            autoCompleteType="email"
-                            error={Boolean(form.errors.email)}
-                            helperText={form.errors.email ?? 'The thing with the monkey sign'}
-                            label="Email"
-                            onChangeText={form.handleChange('email')}
-                            styles={styles.textField}
-                            value={form.values.email}
-                        />
-                        <TextField
-                            autoCompleteType="password"
-                            error={Boolean(form.errors.password)}
-                            helperText={form.errors.password ?? 'Something your neighbour can\'t guess'}
-                            label="Password"
-                            onChangeText={form.handleChange('password')}
-                            secure={true}
-                            styles={styles.textField}
-                            value={form.values.password}
-                        />
-                        <Button
-                            label="Login"
-                            onPress={() => {
-                                form.handleSubmit()
-                            }}
-                            style={styles.submitButton}
-                        />
-                    </View>
-                    <View style={styles.noteContainer}>
-                        <Text style={styles.noteText}>
-                            If you don't have an account
-                            we'll make one for you so just
-                            put something in.
-                        </Text>
-                    </View>
-                </View>
-            </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+        <ScrollView contentContainerStyle={styles.root}>
+            <Image
+                source={require('../../../assets/screens/login/logo.png')}
+                style={styles.image}
+            />
+            <View style={styles.form}>
+                <TextField
+                    autoCapitalize="none"
+                    autoCompleteType="email"
+                    error={Boolean(form.errors.email)}
+                    helperText={form.errors.email ?? 'The thing with the monkey sign'}
+                    label="Email"
+                    onChangeText={form.handleChange('email')}
+                    value={form.values.email}
+                />
+                <TextField
+                    autoCompleteType="password"
+                    error={Boolean(form.errors.password)}
+                    helperText={form.errors.password ?? 'Something your neighbour can\'t guess'}
+                    label="Password"
+                    onChangeText={form.handleChange('password')}
+                    secure={true}
+                    value={form.values.password}
+                />
+                <Button
+                    label="Login"
+                    onPress={() => {
+                        form.handleSubmit()
+                    }}
+                    style={styles.submitButton}
+                />
+            </View>
+            <View style={styles.noteContainer}>
+                <Text style={styles.noteText}>
+                    If you don't have an account
+                    we'll make one for you so just
+                    put something in.
+                </Text>
+            </View>
+        </ScrollView>
     )
 }

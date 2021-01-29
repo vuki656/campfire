@@ -1,5 +1,4 @@
 import React from 'react'
-import type { TextStyle } from 'react-native'
 import {
     StyleSheet,
     Text,
@@ -15,6 +14,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         borderWidth: 3,
         paddingHorizontal: 10,
+        width: '70%',
     },
     // @ts-expect-error
     helperText: (error: boolean) => ({
@@ -64,7 +64,7 @@ export const TextField = (props: TextFieldProps) => {
                 {...other}
                 onChangeText={onChangeText}
                 secureTextEntry={secure}
-                style={[{ width: fullWidth ? '100%' : styles.field.width  }, styles.field, stylesProp ]}
+                style={[{ width: fullWidth ? '100%' : styles.field.width }, styles.field, stylesProp]}
                 value={value}
             />
             {helperText ? (

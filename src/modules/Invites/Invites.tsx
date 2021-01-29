@@ -100,7 +100,7 @@ export const Invites: React.FunctionComponent = () => {
         void connection(Collections.USERS)
             .doc(user?.id)
             .update({
-                memberOf: [...user?.memberOf ?? [], invite.campfire ],
+                memberOf: [...user?.memberOf ?? [], invite.campfire],
             })
             .then(() => {
                 deleteInvite(invite.id)
