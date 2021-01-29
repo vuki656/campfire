@@ -1,11 +1,11 @@
 import * as React from 'react'
 import {
     Image,
+    ScrollView,
     StyleSheet,
     Text,
     View,
 } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 
 import {
     Header,
@@ -23,6 +23,12 @@ import { HomeCampfireGroup } from './HomeCampfireGroup'
 import { HomeNewCampfireDialog } from './HomeNewCampfireDialog'
 
 const styles = StyleSheet.create({
+    headerContainer: {
+        height: '20%',
+    },
+    listContainer: {
+        height: '80%',
+    },
     logo: {
         height: 40,
         width: 120,
@@ -90,8 +96,8 @@ export const Home = () => {
     }, [])
 
     return (
-        <SafeAreaView>
-            <View>
+        <View>
+            <View style={styles.headerContainer}>
                 <Header
                     leftNode={(
                         <Image
@@ -112,16 +118,20 @@ export const Home = () => {
                         </View>
                     ) : null}
                 </View>
-                <HomeCampfireGroup
-                    campfires={ownedCampfires}
-                    title="Your Campfires"
-                />
-                <HomeCampfireGroup
-                    campfires={user?.memberOf}
-                    title="Joined Campfires"
-                />
             </View>
-        </SafeAreaView>
+            <View style={styles.listContainer}>
+                <ScrollView>
+                    <HomeCampfireGroup
+                        campfires={ownedCampfires}
+                        title="Your Campfires"
+                    />
+                    <HomeCampfireGroup
+                        campfires={user?.memberOf}
+                        title="Joined Campfires"
+                    />
+                </ScrollView>
+            </View>
+        </View>
     )
 }
 

@@ -3,6 +3,7 @@ import {
     StyleSheet,
     View,
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 import theme from '../../lib/variables/theme'
 
@@ -45,13 +46,15 @@ export const Header = (props: HeaderProps) => {
     }
 
     return (
-        <View
-            style={[styles.root, {
-                justifyContent: getPosition(),
-            }]}
-        >
-            {leftNode}
-            {rightNode}
-        </View>
+        <SafeAreaView>
+            <View
+                style={[styles.root, {
+                    justifyContent: getPosition(),
+                }]}
+            >
+                {leftNode}
+                {rightNode}
+            </View>
+        </SafeAreaView>
     )
 }
