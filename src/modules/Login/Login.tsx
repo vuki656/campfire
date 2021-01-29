@@ -88,11 +88,11 @@ export const Login = () => {
             .then(async (response) => {
                 return response.json()
             })
-            .then((duckImageResponse: DuckImageResponseType) => {
+            .then(async (duckImageResponse: DuckImageResponseType) => {
                 const imageURL = duckImageResponse.url
 
                 if (imageURL.endsWith('.gif')) {
-                    void fetchDuckPhoto()
+                    await fetchDuckPhoto()
                 } else {
                     duckImageLink = duckImageResponse.url
                 }

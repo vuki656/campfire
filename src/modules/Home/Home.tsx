@@ -18,7 +18,6 @@ import {
 } from '../../lib'
 import theme from '../../lib/variables/theme'
 import type { CampfireType } from '../Campfire'
-import type { UserType } from '../Login'
 
 import { HomeCampfireGroup } from './HomeCampfireGroup'
 import { HomeNewCampfireDialog } from './HomeNewCampfireDialog'
@@ -49,7 +48,6 @@ const styles = StyleSheet.create({
 
 export const Home = () => {
     const [ownedCampfires, setOwnedCampfires] = React.useState<CampfireType[]>([])
-    const [joinedCampfires, setJoinedCampfires] = React.useState<CampfireType[]>([])
 
     const user = useCurrentUser()
 
@@ -70,20 +68,8 @@ export const Home = () => {
             })
     }
 
-    const fetchJoinedCampfires = () => {
-        void connection(Collections.USERS)
-            .doc(user?.id)
-            .get()
-            .then((result) => {
-                const fetchedUser = result.data() as UserType
-
-                setJoinedCampfires(fetchedUser.memberOf)
-            })
-    }
-
     React.useEffect(() => {
         fetchOwnedCampfires()
-        fetchJoinedCampfires()
     }, [])
 
     return (
@@ -114,7 +100,7 @@ export const Home = () => {
                     title="Your Campfires"
                 />
                 <HomeCampfireGroup
-                    campfires={joinedCampfires}
+                    campfires={user.memberOf}
                     title="Joined Campfires"
                 />
             </View>

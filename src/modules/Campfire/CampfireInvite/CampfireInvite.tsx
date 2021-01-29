@@ -21,6 +21,7 @@ import {
     useCurrentUser,
 } from '../../../lib'
 import theme from '../../../lib/variables/theme'
+import type { InviteType } from '../../Invites/Invites.types'
 import type { UserType } from '../../Login'
 
 import type { CampfireInviteProps } from './CampfireInvite.types'
@@ -66,6 +67,7 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
     const currentUser = useCurrentUser()
 
     const [users, setUsers] = React.useState<UserType[]>([])
+    const [invites, setInvites] = React.useState<InviteType[]>([])
 
     const {
         emoji,
@@ -90,8 +92,25 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
             })
     }
 
+    const fetchInvites = () => {
+        void connection(Collections.INVITES)
+            .get()
+            .then((results) => {
+                const fetchedInvites: InviteType[] = []
+
+                results.forEach((result) => {
+                    const fetchedInvite = result.data() as InviteType
+
+                    fetchedInvites.push(fetchedInvite)
+                })
+
+                setInvites(fetchedInvites)
+            })
+    }
+
     React.useEffect(() => {
         fetchUsers()
+        fetchInvites()
     }, [])
 
     const handleBack = () => {
@@ -140,7 +159,17 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
             <View style={styles.list}>
                 <ScrollView>
                     {users.map((user) => {
-                        if (user.id === currentUser?.id) {
+                        const isUserOwner = user.id === currentUser?.id
+
+                        const isUserAMember = user.memberOf.some((joinedCampfire) => {
+                            return joinedCampfire.id === id
+                        })
+
+                        const isUserInvited = invites.some((invite) => {
+                            return invite.to.id === user.id
+                        })
+
+                        if (isUserOwner || isUserAMember || isUserInvited) {
                             return null
                         }
 
@@ -156,7 +185,7 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
                                     </Text>
                                 </View>
                                 <Button
-                                    label="Invite"
+                                    label="+"
                                     onPress={handleInvite(user)}
                                     style={styles.addButton}
                                 />

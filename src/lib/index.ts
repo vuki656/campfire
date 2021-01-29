@@ -1,5 +1,5 @@
 export * from './Collections'
-export * from './getCurrentUser'
+export * from './useCurrentUser'
 export * from './initializeFirebase'
 export * from './useUserAuthentication'
 export * from './connection'
