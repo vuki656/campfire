@@ -43,11 +43,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 10,
     },
-    headerIcon: {
-        height: 30,
-        marginRight: 10,
-        width: 30,
-    },
     toggleButtonIcon: {
         height: 30,
         width: 25,
@@ -113,6 +108,11 @@ export const CampfireAddDialog = (props: CampfireAddDialogProps) => {
         validationSchema: ValidationSchema,
     })
 
+    const handleCancel = () => {
+        toggleDialog()
+        form.resetForm()
+    }
+
     return (
         <>
             <TouchableOpacity
@@ -133,10 +133,7 @@ export const CampfireAddDialog = (props: CampfireAddDialogProps) => {
             <Dialog isOpen={isDialogOpen}>
                 <DialogHeader
                     startIcon={(
-                        <Image
-                            source={require('../../../../assets/screens/campfire/log.png')}
-                            style={styles.headerIcon}
-                        />
+                        <Image source={require('../../../../assets/screens/campfire/log.png')} />
                     )}
                     title="New Log"
                 />
@@ -164,7 +161,7 @@ export const CampfireAddDialog = (props: CampfireAddDialogProps) => {
                 <DialogActions>
                     <Button
                         label="Cancel"
-                        onPress={toggleDialog}
+                        onPress={handleCancel}
                     />
                     <Button
                         label="Create"

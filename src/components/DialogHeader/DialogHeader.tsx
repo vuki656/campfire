@@ -10,9 +10,6 @@ import theme from '../../lib/variables/theme'
 import type { DialogHeaderProps } from './DialogHeader.types'
 
 const styles = StyleSheet.create({
-    icon: {
-        fontSize: 10,
-    },
     note: {
         color: theme.color.gray,
         fontFamily: theme.fontFamily.mPlus,
@@ -21,6 +18,11 @@ const styles = StyleSheet.create({
     },
     root: {
         marginBottom: 20,
+    },
+    startIcon: {
+        height: 30,
+        marginRight: 10,
+        width: 30,
     },
     title: {
         fontFamily: theme.fontFamily.mPlus,
@@ -43,7 +45,9 @@ export const DialogHeader = (props: DialogHeaderProps) => {
     return (
         <View style={styles.root}>
             <View style={styles.titleContainer}>
-                {startIcon ? startIcon : null}
+                {startIcon ? (
+                    React.cloneElement(startIcon, { style: styles.startIcon })
+                ) : null}
                 <Text style={styles.title}>
                     {title}
                 </Text>

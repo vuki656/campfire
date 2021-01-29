@@ -8,25 +8,27 @@ import {
 import useToggle from 'react-use/lib/useToggle'
 import * as Yup from 'yup'
 
-import { Button } from '../../../components/Button'
-import { Dialog } from '../../../components/Dialog'
-import { DialogActions } from '../../../components/DialogActions'
-import { DialogContent } from '../../../components/DialogContent'
-import { DialogHeader } from '../../../components/DialogHeader'
-import { TextField } from '../../../components/TextField'
-import { Collections } from '../../../lib/Collections'
-import { connection } from '../../../lib/connection'
-import { useCurrentUser } from '../../../lib/getCurrentUser'
-import theme from '../../../lib/variables/theme'
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogHeader,
+    TextField,
+} from '../../../components'
+import {
+    Collections,
+    connection,
+    useCurrentUser,
+} from '../../../lib'
 
 import type { CreateCampfireFormTypes } from './HomeNewCampfireDialog.types'
 
 const styles = StyleSheet.create({
-    cancelButton: {
-        backgroundColor: theme.color.white,
+    emojiField: {
+        width: 50,
     },
     toggleButton: {
-        backgroundColor: theme.color.white,
         height: 30,
         width: 130,
     },
@@ -82,6 +84,11 @@ export const HomeNewCampfireDialog = () => {
         validationSchema: ValidationSchema,
     })
 
+    const handleCancel = () => {
+        toggleDialog()
+        form.resetForm()
+    }
+
     return (
         <>
             <Button
@@ -104,7 +111,6 @@ export const HomeNewCampfireDialog = () => {
                 <DialogContent>
                     <TextField
                         error={Boolean(form.errors.name)}
-                        fullWidth={true}
                         helperText={form.errors.name ?? 'How your campfire is going to be called'}
                         label="Name"
                         onChangeText={form.handleChange('name')}
@@ -115,22 +121,25 @@ export const HomeNewCampfireDialog = () => {
                         error={Boolean(form.errors.emoji)}
                         helperText={form.errors.emoji ?? 'Something to give it more flare'}
                         label="Emoji"
+                        labelPosition="center"
                         maxLength={2}
                         onChangeText={form.handleChange('emoji')}
+                        style={styles.emojiField}
+                        textAlign="center"
                         value={form.values.emoji}
                     />
                 </DialogContent>
                 <DialogActions>
                     <Button
                         label="Cancel"
-                        onPress={toggleDialog}
-                        style={styles.cancelButton}
+                        onPress={handleCancel}
                     />
                     <Button
                         label="Create"
                         onPress={() => {
                             form.handleSubmit()
                         }}
+                        variant="secondary"
                     />
                 </DialogActions>
             </Dialog>

@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        marginTop: 30,
         paddingVertical: 50,
         width: '100%',
     },
@@ -50,7 +49,6 @@ const styles = StyleSheet.create({
     noteContainer: {
         backgroundColor: theme.color.gray300,
         borderRadius: 10,
-        marginTop: 40,
         padding: 20,
         width: '70%',
     },
@@ -208,6 +206,7 @@ export const Login = () => {
                     error={Boolean(form.errors.email)}
                     helperText={form.errors.email ?? 'The thing with the monkey sign'}
                     label="Email"
+                    labelPosition="center"
                     onChangeText={form.handleChange('email')}
                     value={form.values.email}
                 />
@@ -216,6 +215,7 @@ export const Login = () => {
                     error={Boolean(form.errors.password)}
                     helperText={form.errors.password ?? 'Something your neighbour can\'t guess'}
                     label="Password"
+                    labelPosition="center"
                     onChangeText={form.handleChange('password')}
                     secure={true}
                     value={form.values.password}

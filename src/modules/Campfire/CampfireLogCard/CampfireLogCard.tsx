@@ -56,7 +56,10 @@ export const CampfireLogCard = (props: CampfireLogCardProps) => {
             style={styles.root}
         >
             <View style={styles.link}>
-                <RNUrlPreview text={log.link} />
+                <RNUrlPreview
+                    style={{ fontFamily: 'helvetica' }}
+                    text={log.link}
+                />
                 <View style={styles.authorContainer}>
                     <Text style={styles.authorPrefix}>
                         Posted by:
