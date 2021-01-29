@@ -26,7 +26,7 @@ import {
 import theme from '../../lib/variables/theme'
 
 import type {
-    DuckImageResponseType,
+    ImageResponseType,
     LoginFormTypes,
     UserType,
 } from './Login.types'
@@ -84,18 +84,12 @@ export const Login = () => {
     const fetchDuckPhoto = async () => {
         let duckImageLink = ''
 
-        await fetch('https://random-d.uk/api/v2/random')
+        await fetch('https://dog.ceo/api/breeds/image/random')
             .then(async (response) => {
                 return response.json()
             })
-            .then(async (duckImageResponse: DuckImageResponseType) => {
-                const imageURL = duckImageResponse.url
-
-                if (imageURL.endsWith('.gif')) {
-                    await fetchDuckPhoto()
-                } else {
-                    duckImageLink = duckImageResponse.url
-                }
+            .then((imageResponse: ImageResponseType) => {
+                duckImageLink = imageResponse.message
             })
 
         return duckImageLink

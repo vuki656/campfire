@@ -9,9 +9,10 @@ export type UserType = {
     id: string
     imageURL: string
     name: string
-    memberOf: CampfireType[]
+    memberOf?: CampfireType[] | undefined
 }
 
-export type DuckImageResponseType = {
-    url: string
+export type ImageResponseType = {
+    message: string
+    status: string
 }
