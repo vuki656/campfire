@@ -26,17 +26,19 @@ const styles = StyleSheet.create({
 
 export const HeaderTitle = (props: HeaderTitleProps) => {
     const {
-        title,
         emoji,
+        title,
     } = props
 
     return (
         <View style={styles.headerTitle}>
-            {emoji ? (
-                <Text style={styles.headerEmoji}>
-                    {emoji}
-                </Text>
-            ) : null}
+            {emoji
+                ? (
+                    <Text style={styles.headerEmoji}>
+                        {emoji}
+                    </Text>
+                )
+                : null}
             <Text style={styles.headerTitleText}>
                 {title}
             </Text>

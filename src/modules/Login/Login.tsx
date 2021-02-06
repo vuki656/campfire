@@ -106,9 +106,9 @@ export const Login = () => {
 
     const saveUserInDatabase = (user: UserType) => {
         const {
-            name,
-            imageURL,
             id,
+            imageURL,
+            name,
         } = user
 
         void connection(Collections.USERS)
@@ -141,8 +141,8 @@ export const Login = () => {
             .createUserWithEmailAndPassword(formValues.email, formValues.password)
             .then(async (result) => {
                 const {
-                    name,
                     imageLink,
+                    name,
                 } = await generateUserInfo()
 
                 saveUserInDatabase({

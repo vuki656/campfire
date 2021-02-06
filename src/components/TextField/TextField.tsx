@@ -19,11 +19,11 @@ const styles = StyleSheet.create({
         borderColor: theme.color.black,
         borderRadius: 4,
         borderWidth: 3,
+        flexShrink: 1,
         paddingHorizontal: 10,
         paddingTop: multiline ? 10 : 0,
         textAlignVertical: multiline ? 'top' : 'auto',
         width: '100%',
-        flexShrink: 1,
     }),
     // @ts-expect-error
     helperText: (error: boolean) => ({
@@ -57,17 +57,17 @@ const styles = StyleSheet.create({
 
 export const TextField = (props: TextFieldProps) => {
     const {
-        label,
-        onChangeText,
-        value,
-        helperText,
-        style,
-        labelPosition = 'start',
-        required = false,
-        fullWidth = false,
         error = false,
-        secure = false,
+        fullWidth = false,
+        helperText,
+        label,
+        labelPosition = 'start',
         multiline,
+        onChangeText,
+        required = false,
+        secure = false,
+        style,
+        value,
         ...other
     } = props
 
@@ -93,12 +93,14 @@ export const TextField = (props: TextFieldProps) => {
                 style={[styles.field(multiline), style]}
                 value={value}
             />
-            {helperText ? (
-                // @ts-expect-error
-                <Text style={styles.helperText(error)}>
-                    {helperText}
-                </Text>
-            ) : null}
+            {helperText ?
+                (
+                    // @ts-expect-error
+                    <Text style={styles.helperText(error)}>
+                        {helperText}
+                    </Text>
+                )
+                : null}
         </View>
     )
 }

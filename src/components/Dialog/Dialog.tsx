@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
 
 export const Dialog = (props: DialogProps) => {
     const {
-        isOpen,
         children,
+        isOpen,
         ...other
     } = props
 

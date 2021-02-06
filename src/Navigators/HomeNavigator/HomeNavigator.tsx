@@ -5,9 +5,9 @@ import { Campfire } from '../../modules/Campfire'
 import { CampfireInvite } from '../../modules/Campfire/CampfireInvite'
 import { Home } from '../../modules/Home'
 
-import type { RootStackParamList } from './HomeNavigator.types'
+import type { RootStackParamList as RootStackParameterList } from './HomeNavigator.types'
 
-const Stack = createStackNavigator<RootStackParamList>()
+const Stack = createStackNavigator<RootStackParameterList>()
 
 export const HomeNavigator = () => {
     return (

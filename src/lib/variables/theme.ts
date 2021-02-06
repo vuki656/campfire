@@ -1,4 +1,4 @@
-/* eslint-disable sort-keys */
+/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 
 export default {
     color: {
@@ -22,4 +22,3 @@ export default {
         title: 25,
     },
 }
-

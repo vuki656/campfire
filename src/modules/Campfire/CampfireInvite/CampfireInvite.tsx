@@ -66,10 +66,10 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
     const [invites, setInvites] = React.useState<InviteType[]>([])
 
     const {
-        emoji,
-        name,
-        id,
         author,
+        emoji,
+        id,
+        name,
     } = route.params.campfire
 
     const fetchUsers = () => {
@@ -114,10 +114,10 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
     }
 
     const handleInvite = (targetUser: UserType) => () => {
-        const newId = cuid()
+        const generatedUserId = cuid()
 
         void connection(Collections.INVITES)
-            .doc(newId)
+            .doc(generatedUserId)
             .set({
                 campfire: {
                     author: author,
@@ -129,7 +129,7 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
                     id: currentUser?.id,
                     name: currentUser?.name,
                 },
-                id: newId,
+                id: generatedUserId,
                 to: {
                     id: targetUser.id,
                     name: targetUser.name,
@@ -157,7 +157,7 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
                     {users.map((user) => {
                         const isUserOwner = user.id === currentUser?.id
 
-                        const isUserAMember = user.memberOf?.some((joinedCampfire) => {
+                        const isUserMember = user.memberOf?.some((joinedCampfire) => {
                             return joinedCampfire.id === id
                         })
 
@@ -165,7 +165,7 @@ export const CampfireInvite = (props: CampfireInviteProps) => {
                             return invite.to.id === user.id
                         })
 
-                        if (isUserOwner || isUserAMember || isUserInvited) {
+                        if (isUserOwner || isUserMember || isUserInvited) {
                             return null
                         }
 

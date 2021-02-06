@@ -76,10 +76,10 @@ export const Campfire = (props: CampfireProps) => {
     }
 
     const {
-        name,
-        id,
-        emoji,
         author,
+        emoji,
+        id,
+        name,
     } = route.params.campfire
 
     const fetchLogs = () => {
@@ -130,13 +130,15 @@ export const Campfire = (props: CampfireProps) => {
                 )}
             />
             <View style={styles.root}>
-                {author.id === user?.id ? (
-                    <Button
-                        label="Invite"
-                        onPress={handleInvite}
-                        style={styles.inviteButton}
-                    />
-                ) : null}
+                {author.id === user?.id
+                    ? (
+                        <Button
+                            label="Invite"
+                            onPress={handleInvite}
+                            style={styles.inviteButton}
+                        />
+                    )
+                    : null}
                 <ScrollView>
                     {logs.map((log) => {
                         return (

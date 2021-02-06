@@ -109,14 +109,16 @@ export const Home = () => {
                 />
                 <View style={styles.topContainer}>
                     <HomeNewCampfireDialog />
-                    {user?.name ? (
-                        <View style={styles.userInfo}>
-                            <Text style={styles.username}>
-                                {user?.name}
-                            </Text>
-                            <UserImage url={user?.imageURL ?? ''} />
-                        </View>
-                    ) : null}
+                    {user?.name
+                        ? (
+                            <View style={styles.userInfo}>
+                                <Text style={styles.username}>
+                                    {user?.name}
+                                </Text>
+                                <UserImage url={user?.imageURL ?? ''} />
+                            </View>
+                        )
+                        : null}
                 </View>
             </View>
             <View style={styles.listContainer}>
@@ -134,4 +136,3 @@ export const Home = () => {
         </View>
     )
 }
-

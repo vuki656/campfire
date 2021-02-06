@@ -37,26 +37,30 @@ const styles = StyleSheet.create({
 })
 export const DialogHeader = (props: DialogHeaderProps) => {
     const {
-        title,
-        startIcon,
         note,
+        startIcon,
+        title,
     } = props
 
     return (
         <View style={styles.root}>
             <View style={styles.titleContainer}>
-                {startIcon ? (
-                    React.cloneElement(startIcon, { style: styles.startIcon })
-                ) : null}
+                {startIcon
+                    ? (
+                        React.cloneElement(startIcon, { style: styles.startIcon })
+                    )
+                    : null}
                 <Text style={styles.title}>
                     {title}
                 </Text>
             </View>
-            {note ? (
-                <Text style={styles.note}>
-                    {note}
-                </Text>
-            ) : null}
+            {note
+                ? (
+                    <Text style={styles.note}>
+                        {note}
+                    </Text>
+                )
+                : null}
         </View>
     )
 }

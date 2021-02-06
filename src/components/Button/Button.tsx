@@ -11,13 +11,13 @@ import type { ButtonProps } from './Button.types'
 
 const styles = StyleSheet.create({
     label: {
-        color: 'black',
-        fontFamily: 'MPlus',
+        color: theme.color.black,
+        fontFamily: theme.fontFamily.mPlus,
     },
     root: {
         alignItems: 'center',
-        backgroundColor: '#f78e00',
-        borderColor: 'black',
+        backgroundColor: theme.color.orange,
+        borderColor: theme.color.black,
         borderRadius: 5,
         borderWidth: 3,
         display: 'flex',
@@ -29,14 +29,13 @@ const styles = StyleSheet.create({
     },
 })
 
-// TODO
 export const Button = (props: ButtonProps) => {
     const {
         label,
-        startIcon,
-        variant = 'primary',
         labelFontSize = 18,
-        style: stylesProp,
+        startIcon,
+        style: stylesProperty,
+        variant = 'primary',
         ...other
     } = props
 
@@ -44,7 +43,7 @@ export const Button = (props: ButtonProps) => {
         <TouchableOpacity
             style={[
                 styles.root,
-                stylesProp, {
+                stylesProperty, {
                     backgroundColor: variant === 'secondary'
                         ? theme.color.orange
                         : theme.color.white,
