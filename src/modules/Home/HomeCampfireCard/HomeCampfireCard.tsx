@@ -1,19 +1,23 @@
+import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import {
     StyleSheet,
     Text,
+    TouchableOpacity,
     View,
 } from 'react-native'
+
+import theme from '../../../lib/variables/theme'
 
 import type { HomeCampfireCardProps } from './HomeCampfireCard.types'
 
 const styles = StyleSheet.create({
     createdBy: {
-        fontFamily: 'MPlus',
-        fontSize: 10,
+        fontFamily: theme.fontFamily.mPlus,
+        fontSize: theme.fontSize.caption,
     },
     emoji: {
-        fontSize: 20,
+        fontSize: theme.fontSize.subtitle,
     },
     header: {
         alignItems: 'center',
@@ -23,8 +27,8 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     root: {
-        backgroundColor: 'white',
-        borderColor: 'black',
+        backgroundColor: theme.color.white,
+        borderColor: theme.color.black,
         borderRadius: 5,
         borderWidth: 4,
         display: 'flex',
@@ -34,22 +38,35 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     title: {
-        fontFamily: 'MPlus',
-        fontSize: 20,
+        fontFamily: theme.fontFamily.mPlus,
+        fontSize: theme.fontSize.subtitle,
         marginLeft: 10,
+        width: '90%',
     },
 })
 
 export const HomeCampfireCard = (props: HomeCampfireCardProps) => {
     const { campfire } = props
 
+    const navigator = useNavigation()
+
+    const handleNavigation = () => {
+        navigator.navigate('Campfire', { campfire: campfire })
+    }
+
     return (
-        <View style={styles.root}>
+        <TouchableOpacity
+            onPress={handleNavigation}
+            style={styles.root}
+        >
             <View style={styles.header}>
                 <Text style={styles.emoji}>
                     {campfire.emoji}
                 </Text>
-                <Text style={styles.title}>
+                <Text
+                    numberOfLines={1}
+                    style={styles.title}
+                >
                     {campfire.name}
                 </Text>
             </View>
@@ -60,6 +77,6 @@ export const HomeCampfireCard = (props: HomeCampfireCardProps) => {
                 </Text>
                 {campfire.author.name}
             </Text>
-        </View>
+        </TouchableOpacity>
     )
 }

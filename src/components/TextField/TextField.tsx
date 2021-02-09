@@ -1,5 +1,4 @@
 import React from 'react'
-import type { TextStyle } from 'react-native'
 import {
     StyleSheet,
     Text,
@@ -7,72 +6,101 @@ import {
     View,
 } from 'react-native'
 
-import type { TextFieldProps } from './TextField.types'
+import theme from '../../lib/variables/theme'
+
+import type {
+    LabelPositionType,
+    TextFieldProps,
+} from './TextField.types'
 
 const styles = StyleSheet.create({
-    field: {
-        borderColor: 'black',
+    // @ts-expect-error
+    field: (multiline: boolean) => ({
+        borderColor: theme.color.black,
         borderRadius: 4,
         borderWidth: 3,
+        flexShrink: 1,
         paddingHorizontal: 10,
-    },
+        paddingTop: multiline ? 10 : 0,
+        textAlignVertical: multiline ? 'top' : 'auto',
+        width: '100%',
+    }),
     // @ts-expect-error
     helperText: (error: boolean) => ({
-        color: error ? 'red' : '#5f7d95',
-        fontFamily: 'MPlus',
-        fontSize: 10,
+        color: error ? theme.color.red : theme.color.gray200,
+        fontFamily: theme.fontFamily.mPlus,
+        fontSize: theme.fontSize.caption,
         marginTop: 3,
     }),
     label: {
-        fontFamily: 'MPlus',
+        fontFamily: theme.fontFamily.mPlus,
         fontSize: 20,
         marginBottom: 5,
     },
-    root: {
+    // @ts-expect-error
+    labelContainer: (labelPosition: LabelPositionType) => ({
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: labelPosition === 'center' ? 'center' : `flex-${labelPosition}`,
+        width: '100%',
+    }),
+    // @ts-expect-error
+    root: (fullWidth: boolean) => ({
         alignItems: 'center',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         marginBottom: 15,
-        width: '100%',
-    },
+        width: fullWidth ? '100%' : '65%',
+    }),
 })
 
 export const TextField = (props: TextFieldProps) => {
     const {
-        label,
-        onChangeText,
-        value,
-        helperText,
-        styles: stylesProp,
-        required = false,
-        fullWidth = false,
         error = false,
+        fullWidth = false,
+        helperText,
+        label,
+        labelPosition = 'start',
+        multiline,
+        onChangeText,
+        required = false,
         secure = false,
+        style,
+        value,
         ...other
     } = props
 
     return (
-        <View style={styles.root}>
-            <Text style={styles.label}>
-                {label}
-                <Text>
-                    {required ? '*' : ''}
+        // @ts-expect-error
+        <View style={styles.root(fullWidth)}>
+            {/*
+            // @ts-expect-error */}
+            <View style={styles.labelContainer(labelPosition)}>
+                <Text style={styles.label}>
+                    {label}
+                    <Text>
+                        {required ? '*' : ''}
+                    </Text>
                 </Text>
-            </Text>
+            </View>
             <TextInput
                 {...other}
+                multiline={multiline}
                 onChangeText={onChangeText}
                 secureTextEntry={secure}
-                style={[{ width: fullWidth ? '100%' : styles.field.width  }, styles.field, stylesProp ]}
+                // @ts-expect-error
+                style={[styles.field(multiline), style]}
                 value={value}
             />
-            {helperText ? (
-                // @ts-expect-error
-                <Text style={styles.helperText(error)}>
-                    {helperText}
-                </Text>
-            ) : null}
+            {helperText ?
+                (
+                    // @ts-expect-error
+                    <Text style={styles.helperText(error)}>
+                        {helperText}
+                    </Text>
+                )
+                : null}
         </View>
     )
 }

@@ -1,29 +1,30 @@
 import 'firebase/firestore'
 import React from 'react'
-import { LogBox } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
-import { initializeFirebase } from './src/lib/initializeFirebase'
-import { useFontsInitialization } from './src/lib/useFontsInitialization'
-import { useUserAuthentication } from './src/lib/useUserAuthentication'
+import {
+    initializeErrorSuppression,
+    initializeFirebase,
+    useFontsInitialization,
+    useUserAuthentication,
+} from './src/lib'
 import { Login } from './src/modules/Login'
-import { Root } from './src/modules/Root'
+import { BottomNavigator } from './src/Navigators'
 
-LogBox.ignoreLogs(['Setting a timer for a long period of time'])
-
+initializeErrorSuppression()
 initializeFirebase()
 
 export default function App() {
     const isUserAuthenticated = useUserAuthentication()
     const fontsLoaded = useFontsInitialization()
 
-    if (!fontsLoaded) {
+    if (!fontsLoaded || typeof isUserAuthenticated === 'undefined') {
         return null
     }
 
     return (
         <SafeAreaProvider>
-            {isUserAuthenticated ? <Root /> : <Login />}
+            {isUserAuthenticated ? <BottomNavigator /> : <Login />}
         </SafeAreaProvider>
     )
 }

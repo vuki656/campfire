@@ -3,12 +3,9 @@ import { useFormik } from 'formik'
 import * as React from 'react'
 import {
     Image,
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
+    ScrollView,
     StyleSheet,
     Text,
-    TouchableWithoutFeedback,
     View,
 } from 'react-native'
 import {
@@ -18,52 +15,57 @@ import {
 } from 'unique-names-generator'
 import * as Yup from 'yup'
 
-import { Button } from '../../components/Button'
-import { TextField } from '../../components/TextField'
+import {
+    Button,
+    TextField,
+} from '../../components'
+import {
+    Collections,
+    connection,
+} from '../../lib'
+import theme from '../../lib/variables/theme'
 
-import type { LoginFormTypes } from './Login.types'
-
-const randomAnimalJs = require('random-animal.js') // Lib doesn't have types so this import has to be used
+import type {
+    ImageResponseType,
+    LoginFormTypes,
+    UserType,
+} from './Login.types'
 
 const styles = StyleSheet.create({
     form: {
         alignItems: 'center',
-        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
+        paddingVertical: 50,
         width: '100%',
     },
     image: {
         height: 200,
-        marginBottom: 40,
+        marginTop: 120,
         resizeMode: 'contain',
         width: 200,
     },
-    keyboardAvoidingViewContainer: {
-        flex: 1,
-    },
     noteContainer: {
-        backgroundColor: '#eff3f6',
+        backgroundColor: theme.color.gray300,
         borderRadius: 10,
         padding: 20,
         width: '70%',
     },
     noteText: {
-        color: '#8a8a8a',
-        fontFamily: 'MPlus',
-        fontSize: 10,
+        color: theme.color.gray,
+        fontFamily: theme.fontFamily.mPlus,
+        fontSize: theme.fontSize.caption,
         textAlign: 'center',
     },
     root: {
         alignItems: 'center',
-        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
-        padding: 20,
     },
     submitButton: {
         marginTop: 20,
-    },
-    textField: {
-        width: '70%',
     },
 })
 
@@ -79,6 +81,20 @@ const ValidationSchema = Yup.object()
     })
 
 export const Login = () => {
+    const fetchDuckPhoto = async () => {
+        let duckImageLink = ''
+
+        await fetch('https://dog.ceo/api/breeds/image/random')
+            .then(async (response) => {
+                return response.json()
+            })
+            .then((imageResponse: ImageResponseType) => {
+                duckImageLink = imageResponse.message
+            })
+
+        return duckImageLink
+    }
+
     const checkIfUserExists = async (email: string) => {
         return firebase
             .auth()
@@ -88,22 +104,57 @@ export const Login = () => {
             })
     }
 
+    const saveUserInDatabase = (user: UserType) => {
+        const {
+            id,
+            imageURL,
+            name,
+        } = user
+
+        void connection(Collections.USERS)
+            .doc(id)
+            .set({
+                id: id,
+                imageURL: imageURL,
+                name: name,
+            })
+    }
+
+    const generateUserInfo = async () => {
+        const randomName = uniqueNamesGenerator({
+            dictionaries: [adjectives, animals],
+            separator: ' ',
+            style: 'capital',
+        })
+
+        const randomAnimalImageLink = await fetchDuckPhoto()
+
+        return {
+            imageLink: randomAnimalImageLink,
+            name: randomName,
+        }
+    }
+
     const registerUser = (formValues: LoginFormTypes) => {
         void firebase
             .auth()
             .createUserWithEmailAndPassword(formValues.email, formValues.password)
             .then(async (result) => {
-                const randomName = uniqueNamesGenerator({
-                    dictionaries: [adjectives, animals],
-                    separator: ' ',
-                    style: 'capital',
+                const {
+                    imageLink,
+                    name,
+                } = await generateUserInfo()
+
+                saveUserInDatabase({
+                    id: result.user?.uid ?? '',
+                    imageURL: imageLink,
+                    memberOf: [],
+                    name: name,
                 })
 
-                const randomAnimalLink = await randomAnimalJs.randomPanda()
-
                 return result.user?.updateProfile({
-                    displayName: randomName,
-                    photoURL: randomAnimalLink,
+                    displayName: name,
+                    photoURL: imageLink,
                 })
             })
     }
@@ -122,7 +173,6 @@ export const Login = () => {
         } else {
             registerUser(formValues)
         }
-
     }
 
     const form = useFormik<LoginFormTypes>({
@@ -138,54 +188,47 @@ export const Login = () => {
     })
 
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.keyboardAvoidingViewContainer}
-        >
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={styles.root}>
-                    <View style={styles.form}>
-                        <Image
-                            source={require('../../../assets/screens/login/logo.png')}
-                            style={styles.image}
-                        />
-                        <TextField
-                            autoCapitalize="none"
-                            autoCompleteType="email"
-                            error={Boolean(form.errors.email)}
-                            helperText={form.errors.email ?? 'The thing with the monkey sign'}
-                            label="Email"
-                            onChangeText={form.handleChange('email')}
-                            styles={styles.textField}
-                            value={form.values.email}
-                        />
-                        <TextField
-                            autoCompleteType="password"
-                            error={Boolean(form.errors.password)}
-                            helperText={form.errors.password ?? 'Something your neighbour can\'t guess'}
-                            label="Password"
-                            onChangeText={form.handleChange('password')}
-                            secure={true}
-                            styles={styles.textField}
-                            value={form.values.password}
-                        />
-                        <Button
-                            label="Login"
-                            onPress={() => {
-                                form.handleSubmit()
-                            }}
-                            style={styles.submitButton}
-                        />
-                    </View>
-                    <View style={styles.noteContainer}>
-                        <Text style={styles.noteText}>
-                            If you don't have an account
-                            we'll make one for you so just
-                            put something in.
-                        </Text>
-                    </View>
-                </View>
-            </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+        <ScrollView contentContainerStyle={styles.root}>
+            <Image
+                source={require('../../../assets/screens/login/logo.png')}
+                style={styles.image}
+            />
+            <View style={styles.form}>
+                <TextField
+                    autoCapitalize="none"
+                    autoCompleteType="email"
+                    error={Boolean(form.errors.email)}
+                    helperText={form.errors.email ?? 'The thing with the monkey sign'}
+                    label="Email"
+                    labelPosition="center"
+                    onChangeText={form.handleChange('email')}
+                    value={form.values.email}
+                />
+                <TextField
+                    autoCompleteType="password"
+                    error={Boolean(form.errors.password)}
+                    helperText={form.errors.password ?? 'Something your neighbour can\'t guess'}
+                    label="Password"
+                    labelPosition="center"
+                    onChangeText={form.handleChange('password')}
+                    secure={true}
+                    value={form.values.password}
+                />
+                <Button
+                    label="Login"
+                    onPress={() => {
+                        form.handleSubmit()
+                    }}
+                    style={styles.submitButton}
+                />
+            </View>
+            <View style={styles.noteContainer}>
+                <Text style={styles.noteText}>
+                    If you don't have an account
+                    we'll make one for you so just
+                    put something in.
+                </Text>
+            </View>
+        </ScrollView>
     )
 }

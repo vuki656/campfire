@@ -1,22 +1,23 @@
 import React from 'react'
-import type { TextStyle } from 'react-native'
 import {
     StyleSheet,
     Text,
     TouchableOpacity,
 } from 'react-native'
 
+import theme from '../../lib/variables/theme'
+
 import type { ButtonProps } from './Button.types'
 
 const styles = StyleSheet.create({
     label: {
-        color: 'black',
-        fontFamily: 'MPlus',
+        color: theme.color.black,
+        fontFamily: theme.fontFamily.mPlus,
     },
     root: {
         alignItems: 'center',
-        backgroundColor: '#f78e00',
-        borderColor: 'black',
+        backgroundColor: theme.color.orange,
+        borderColor: theme.color.black,
         borderRadius: 5,
         borderWidth: 3,
         display: 'flex',
@@ -31,19 +32,27 @@ const styles = StyleSheet.create({
 export const Button = (props: ButtonProps) => {
     const {
         label,
-        startIcon,
         labelFontSize = 18,
-        style: stylesProp,
+        startIcon,
+        style: stylesProperty,
+        variant = 'primary',
         ...other
     } = props
 
     return (
         <TouchableOpacity
-            style={StyleSheet.compose<TextStyle>(styles.root, stylesProp)}
+            style={[
+                styles.root,
+                stylesProperty, {
+                    backgroundColor: variant === 'secondary'
+                        ? theme.color.orange
+                        : theme.color.white,
+                },
+            ]}
             {...other}
         >
             {startIcon ? startIcon : null}
-            <Text style={StyleSheet.compose<TextStyle>(styles.label, { fontSize: labelFontSize })}>
+            <Text style={[styles.label, { fontSize: labelFontSize }]}>
                 {label}
             </Text>
         </TouchableOpacity>
