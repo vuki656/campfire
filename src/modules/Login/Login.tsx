@@ -40,11 +40,14 @@ const styles = StyleSheet.create({
         paddingVertical: 50,
         width: '100%',
     },
-    image: {
-        height: 200,
+    logoImage: {
+        height: 150,
         marginTop: 120,
         resizeMode: 'contain',
-        width: 200,
+    },
+    logoText: {
+        fontFamily: theme.fontFamily.nuitoBold,
+        fontSize: theme.fontSize.title,
     },
     noteContainer: {
         backgroundColor: theme.color.gray300,
@@ -190,9 +193,12 @@ export const Login = () => {
     return (
         <ScrollView contentContainerStyle={styles.root}>
             <Image
-                source={require('../../../assets/screens/login/logo.png')}
-                style={styles.image}
+                source={require('../../../assets/screens/login/logo2.png')}
+                style={styles.logoImage}
             />
+            <Text style={styles.logoText}>
+                Campfire
+            </Text>
             <View style={styles.form}>
                 <TextField
                     autoCapitalize="none"
@@ -225,8 +231,8 @@ export const Login = () => {
             <View style={styles.noteContainer}>
                 <Text style={styles.noteText}>
                     If you don't have an account
-                    we'll make one for you so just
-                    put something in.
+                    just put something in and we'll make one
+                    for you.
                 </Text>
             </View>
         </ScrollView>

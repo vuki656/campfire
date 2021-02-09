@@ -14,6 +14,8 @@ export default {
     },
     fontFamily: {
         mPlus: 'MPlus',
+        nuitoBold: 'NuitoSansBold',
+        nuitoLight: 'NuitoSansLight',
     },
     fontSize: {
         caption: 10,
