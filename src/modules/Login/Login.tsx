@@ -204,19 +204,17 @@ export const Login = () => {
                     autoCapitalize="none"
                     autoCompleteType="email"
                     error={Boolean(form.errors.email)}
-                    helperText={form.errors.email ?? 'The thing with the monkey sign'}
-                    label="Email"
-                    labelPosition="center"
+                    helperText={form.errors.email}
                     onChangeText={form.handleChange('email')}
+                    placeholder="Email"
                     value={form.values.email}
                 />
                 <TextField
                     autoCompleteType="password"
                     error={Boolean(form.errors.password)}
-                    helperText={form.errors.password ?? 'Something your neighbour can\'t guess'}
-                    label="Password"
-                    labelPosition="center"
+                    helperText={form.errors.password}
                     onChangeText={form.handleChange('password')}
+                    placeholder="Password"
                     secure={true}
                     value={form.values.password}
                 />

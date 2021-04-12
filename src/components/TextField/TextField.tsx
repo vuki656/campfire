@@ -8,21 +8,18 @@ import {
 
 import theme from '../../lib/variables/theme'
 
-import type {
-    LabelPositionType,
-    TextFieldProps,
-} from './TextField.types'
+import type { TextFieldProps } from './TextField.types'
 
 const styles = StyleSheet.create({
     // @ts-expect-error
     field: (multiline: boolean) => ({
-        borderColor: theme.color.black,
-        borderRadius: 4,
-        borderWidth: 3,
-        flexShrink: 1,
+        borderColor: theme.color.grayNew.light500,
+        borderRadius: 7,
+        borderWidth: 2,
+        fontFamily: theme.fontFamily.mPlusRegular,
         paddingHorizontal: 10,
-        paddingTop: multiline ? 10 : 0,
-        textAlignVertical: multiline ? 'top' : 'auto',
+        paddingVertical: 5,
+        textAlignVertical: multiline ? 'top' : 'center',
         width: '100%',
     }),
     // @ts-expect-error
@@ -31,18 +28,6 @@ const styles = StyleSheet.create({
         fontFamily: theme.fontFamily.mPlus,
         fontSize: theme.fontSize.caption,
         marginTop: 3,
-    }),
-    label: {
-        fontFamily: theme.fontFamily.mPlus,
-        fontSize: 20,
-        marginBottom: 5,
-    },
-    // @ts-expect-error
-    labelContainer: (labelPosition: LabelPositionType) => ({
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: labelPosition === 'center' ? 'center' : `flex-${labelPosition}`,
-        width: '100%',
     }),
     // @ts-expect-error
     root: (fullWidth: boolean) => ({
@@ -60,8 +45,6 @@ export const TextField = (props: TextFieldProps) => {
         error = false,
         fullWidth = false,
         helperText,
-        label,
-        labelPosition = 'start',
         multiline,
         onChangeText,
         required = false,
@@ -74,16 +57,6 @@ export const TextField = (props: TextFieldProps) => {
     return (
         // @ts-expect-error
         <View style={styles.root(fullWidth)}>
-            {/*
-            // @ts-expect-error */}
-            <View style={styles.labelContainer(labelPosition)}>
-                <Text style={styles.label}>
-                    {label}
-                    <Text>
-                        {required ? '*' : ''}
-                    </Text>
-                </Text>
-            </View>
             <TextInput
                 {...other}
                 multiline={multiline}
