@@ -18,8 +18,7 @@ export const useCurrentUser = () => {
     React.useEffect(() => {
         void connection(Collections.USERS)
             .doc(firebaseUser?.uid)
-            .get()
-            .then((result) => {
+            .onSnapshot((result) => {
                 const fetchedUser = result.data() as UserType
 
                 setUser(fetchedUser)

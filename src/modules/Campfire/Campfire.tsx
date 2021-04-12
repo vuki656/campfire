@@ -87,8 +87,7 @@ export const Campfire = (props: CampfireProps) => {
             .firestore()
             .collection(Collections.LOGS)
             .where('metadata.campfire.id', '==', id)
-            .get()
-            .then((result) => {
+            .onSnapshot((result) => {
                 const fetchedLogs: LogType[] = []
 
                 result.forEach((singleResult) => {

@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         height: '80%',
+        marginTop: 30,
     },
     logo: {
         height: 40,
@@ -54,14 +55,14 @@ const styles = StyleSheet.create({
 
 export const Home = () => {
     const [ownedCampfires, setOwnedCampfires] = React.useState<CampfireType[]>([])
+    const [joinedCampfires, setJoinedCampfires] = React.useState<CampfireType[]>([])
 
     const user = useCurrentUser()
 
     const fetchOwnedCampfires = () => {
         void connection(Collections.CAMPFIRES)
             .where('author.id', '==', user?.id)
-            .get()
-            .then((results) => {
+            .onSnapshot((results) => {
                 const fetchedCampfires: CampfireType[] = []
 
                 results.forEach((result) => {
@@ -74,26 +75,24 @@ export const Home = () => {
             })
     }
 
-    const initializeListener = () => {
-        void connection(Collections.CAMPFIRES)
-            .where('author.id', '==', user?.id)
-            .onSnapshot((latestResults) => {
-                const fetchedCampfires: CampfireType[] = []
+    const fetchJoinedCampfires = () => {
+        void connection(Collections.USERS)
+            .where('id', '==', user?.id)
+            .onSnapshot((results) => {
+                let fetchedCampfires: CampfireType[] = []
 
-                latestResults.forEach((result) => {
-                    const fetchedCampfire = result.data() as CampfireType
-
-                    fetchedCampfires.push(fetchedCampfire)
+                results.forEach((result) => {
+                    fetchedCampfires = result.data().memberOf as CampfireType[] ?? []
                 })
 
-                setOwnedCampfires(fetchedCampfires)
+                setJoinedCampfires(fetchedCampfires)
             })
     }
 
     React.useEffect(() => {
         fetchOwnedCampfires()
-        initializeListener()
-    }, [])
+        fetchJoinedCampfires()
+    }, [user])
 
     return (
         <View>
@@ -128,7 +127,7 @@ export const Home = () => {
                         title="Your Campfires"
                     />
                     <HomeCampfireGroup
-                        campfires={user?.memberOf}
+                        campfires={joinedCampfires}
                         title="Joined Campfires"
                     />
                 </ScrollView>
